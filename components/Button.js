@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
 
-import Colors from "../../utils/colors";
+import Colors from "../utils/colors";
 
 // android styles, ionic-like
 
