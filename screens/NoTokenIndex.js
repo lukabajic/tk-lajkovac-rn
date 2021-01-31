@@ -13,9 +13,9 @@ import Colors from "../utils/colors";
 
 import image from "../assets/banner.png";
 
-const NotAuthenthicated = ({ navigation }) => {
+const NoTokenIndex = ({ navigation }) => {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.wrapper}>
         <Image style={styles.image} source={image} />
         <LargeTitle style={{ color: Colors.black }}>TK Lajkovac</LargeTitle>
@@ -76,4 +76,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NotAuthenthicated;
+export default NoTokenIndex;
