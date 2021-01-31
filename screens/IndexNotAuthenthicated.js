@@ -7,11 +7,11 @@ import {
   ScrollView,
 } from "react-native";
 
-import { LargeTitle, Headline, Callout } from "../../../components/Typography";
-import Button from "../../../components/Button";
-import Colors from "../../../utils/colors";
+import { LargeTitle, Headline, Callout } from "../components/Typography";
+import Button from "../components/Button";
+import Colors from "../utils/colors";
 
-import image from "../../../assets/banner.png";
+import image from "../assets/banner.png";
 
 const NotAuthenthicated = ({ navigation }) => {
   return (
