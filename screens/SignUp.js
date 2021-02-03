@@ -7,93 +7,19 @@ import {
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { connect } from "react-redux";
 
 import FormFields from "../components/FormFields";
 import Button from "../components/Button";
 import Link from "../components/Link";
 import { LargeTitle } from "../components/Typography";
 import colors from "../utils/colors";
+import { auth } from "../store/actions";
+import { validate } from "../utils/validate";
+import { signUpForm as initialForm } from "../utils/forms";
 
-const SignUp = () => {
-  const [form, setForm] = useState({
-    anyTouched: false,
-    values: {
-      email: "",
-      password: "",
-      confPassword: "",
-    },
-    fields: {
-      email: {
-        type: "emailAddress",
-        label: "Email",
-        placeholder: "primer@gmail.com",
-        autoFocus: true,
-        meta: {
-          valid: false,
-          touched: false,
-          error: null,
-        },
-      },
-      password: {
-        type: "newPassword",
-        label: "Lozinka",
-        placeholder: "********",
-        autoFocus: false,
-        meta: {
-          valid: false,
-          touched: false,
-          error: null,
-        },
-      },
-      confPassword: {
-        type: "password",
-        label: "Ponovite lozinku",
-        placeholder: "********",
-        autoFocus: false,
-        meta: {
-          valid: false,
-          touched: false,
-          error: null,
-        },
-      },
-    },
-  });
-
-  const validate = (field, value) => {
-    let error = null;
-    let valid = true;
-    switch (field) {
-      case "email":
-        if (!value) {
-          error = "Obavezno polje";
-          valid = false;
-        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-          error = "Nepravilna email adresa";
-          valid = false;
-        }
-        return { error, valid };
-      case "password":
-        if (!value) {
-          error = "Obavezno polje";
-          valid = false;
-        } else if (value.length < 8) {
-          error = "Sifra treba da ima barem 8 karaktera";
-          valid = false;
-        }
-        return { error, valid };
-      case "confPassword":
-        if (!value) {
-          error = "Obavezno polje";
-          valid = false;
-        } else if (value !== form.values.password) {
-          error = "Sifra bi trebalo da se poklapaju.";
-          valid = false;
-        }
-        return { error, valid };
-      default:
-        return { error, valid };
-    }
-  };
+const SignUp = ({ auth }) => {
+  const [form, setForm] = useState(initialForm);
 
   const onChangeHandler = (field, value) => {
     setForm({
@@ -140,6 +66,14 @@ const SignUp = () => {
     form.fields.password.meta.valid &&
     form.fields.confPassword.meta.valid;
 
+  const onSubmit = () => {
+    const { email, password } = form.values;
+
+    auth("/register", email, password);
+
+    setForm(initialForm);
+  };
+
   return (
     <SafeAreaView style={styles.screen}>
       <KeyboardAvoidingView
@@ -159,7 +93,7 @@ const SignUp = () => {
             style={styles.inputs}
           />
           <View style={styles.actions}>
-            <Button primary square onPress={() => {}} disabled={!isFormValid()}>
+            <Button primary square onPress={onSubmit} disabled={!isFormValid()}>
               <Ionicons
                 name="arrow-forward"
                 size={28}
@@ -199,4 +133,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUp;
+export default connect(null, { auth })(SignUp);
