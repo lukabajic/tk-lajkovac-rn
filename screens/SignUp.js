@@ -16,10 +16,10 @@ import { LargeTitle } from "../components/Typography";
 import colors from "../utils/colors";
 import { auth } from "../store/actions";
 import { validate } from "../utils/validate";
-import { signUpForm as initialForm } from "../utils/forms";
+import { signUpForm } from "../utils/forms";
 
 const SignUp = ({ auth }) => {
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = useState(signUpForm);
 
   const onChangeHandler = (field, value) => {
     setForm({
@@ -71,7 +71,7 @@ const SignUp = ({ auth }) => {
 
     auth("/register", email, password);
 
-    setForm(initialForm);
+    setForm(signUpForm);
   };
 
   return (

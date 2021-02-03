@@ -6,18 +6,20 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
+import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 
 import FormFields from "../components/FormFields";
 import Button from "../components/Button";
 import Link from "../components/Link";
 import { LargeTitle } from "../components/Typography";
+import { auth } from "../store/actions";
 import colors from "../utils/colors";
 import { validate } from "../utils/validate";
-import { signInFom as initialForm } from "../utils/forms";
+import { signInForm } from "../utils/forms";
 
-const SignIn = () => {
-  const [form, setForm] = useState(initialForm);
+const SignIn = ({ auth }) => {
+  const [form, setForm] = useState(signInForm);
 
   const onChangeHandler = (field, value) => {
     setForm({
@@ -67,7 +69,7 @@ const SignIn = () => {
 
     auth("/login", email, password);
 
-    setForm(initialForm);
+    setForm(signInForm);
   };
 
   return (
@@ -132,4 +134,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignIn;
+export default connect(null, { auth })(SignIn);

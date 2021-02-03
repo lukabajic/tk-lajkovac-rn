@@ -16,6 +16,13 @@ const MainNavigator = ({ token, loading }) => {
 
   if (!token) return <NoTokenStack />;
 
+  if (token)
+    return (
+      <View>
+        <Text>{token}</Text>
+      </View>
+    );
+
   return (
     <View style={styles.container}>
       <Text>Nešto nije uredu sa aplikacijom.</Text>
