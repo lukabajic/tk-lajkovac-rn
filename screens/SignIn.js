@@ -13,66 +13,11 @@ import Button from "../components/Button";
 import Link from "../components/Link";
 import { LargeTitle } from "../components/Typography";
 import colors from "../utils/colors";
+import { validate } from "../utils/validate";
+import { signInFom as initialForm } from "../utils/forms";
 
 const SignIn = () => {
-  const [form, setForm] = useState({
-    anyTouched: false,
-    values: {
-      email: "",
-      password: "",
-    },
-    fields: {
-      email: {
-        type: "emailAddress",
-        label: "Email",
-        placeholder: "primer@gmail.com",
-        autoFocus: true,
-        meta: {
-          valid: false,
-          touched: false,
-          error: null,
-        },
-      },
-      password: {
-        type: "newPassword",
-        label: "Lozinka",
-        placeholder: "********",
-        autoFocus: false,
-        meta: {
-          valid: false,
-          touched: false,
-          error: null,
-        },
-      },
-    },
-  });
-
-  const validate = (field, value) => {
-    let error = null;
-    let valid = true;
-    switch (field) {
-      case "email":
-        if (!value) {
-          error = "Obavezno polje";
-          valid = false;
-        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-          error = "Nepravilna email adresa";
-          valid = false;
-        }
-        return { error, valid };
-      case "password":
-        if (!value) {
-          error = "Obavezno polje";
-          valid = false;
-        } else if (value.length < 8) {
-          error = "Sifra treba da ima barem 8 karaktera";
-          valid = false;
-        }
-        return { error, valid };
-      default:
-        return { error, valid };
-    }
-  };
+  const [form, setForm] = useState(initialForm);
 
   const onChangeHandler = (field, value) => {
     setForm({
@@ -117,6 +62,14 @@ const SignIn = () => {
   const isFormValid = () =>
     form.fields.email.meta.valid && form.fields.password.meta.valid;
 
+  const onSubmit = () => {
+    const { email, password } = form.values;
+
+    auth("/login", email, password);
+
+    setForm(initialForm);
+  };
+
   return (
     <SafeAreaView style={styles.screen}>
       <KeyboardAvoidingView
@@ -136,7 +89,7 @@ const SignIn = () => {
             style={styles.inputs}
           />
           <View style={styles.actions}>
-            <Button primary square onPress={() => {}} disabled={!isFormValid()}>
+            <Button primary square onPress={onSubmit} disabled={!isFormValid()}>
               <Ionicons
                 name="arrow-forward"
                 size={28}
