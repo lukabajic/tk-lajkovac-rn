@@ -1,25 +1,22 @@
 import React from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 
 import NoTokenStack from "./NoTokenStack";
 
-import Colors from "../utils/colors";
-
-const MainNavigator = ({ token, loading }) => {
-  if (loading)
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator color={Colors.primary} size="large" />
-      </View>
-    );
-
+const MainNavigator = ({ token, user }) => {
   if (!token) return <NoTokenStack />;
 
-  if (token)
+  const {
+    data: { displayName, phone },
+  } = user;
+
+  if (!displayName || !phone)
     return (
       <View>
-        <Text>{token}</Text>
+        <Text>Nema</Text>
+        <Text>{displayName}</Text>
+        <Text>{phone}</Text>
       </View>
     );
 
@@ -43,5 +40,5 @@ const styles = StyleSheet.create({
 
 export default connect((state) => ({
   token: state.auth.token,
-  loading: state.auth.loading,
+  user: state.user.user,
 }))(MainNavigator);
