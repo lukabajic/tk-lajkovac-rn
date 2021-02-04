@@ -17,8 +17,10 @@ import { auth } from "../store/actions";
 import colors from "../utils/colors";
 import { validate } from "../utils/validate";
 import { signInForm } from "../utils/forms";
+import Alert from "../components/Alert";
+import Loader from "../components/Loader";
 
-const SignIn = ({ auth }) => {
+const SignIn = ({ auth, error, loading }) => {
   const [form, setForm] = useState(signInForm);
 
   const onChangeHandler = (field, value) => {
@@ -72,6 +74,8 @@ const SignIn = ({ auth }) => {
     setForm(signInForm);
   };
 
+  if (loading) return <Loader />;
+
   return (
     <SafeAreaView style={styles.screen}>
       <KeyboardAvoidingView
@@ -84,6 +88,7 @@ const SignIn = ({ auth }) => {
           <View style={styles.header}>
             <LargeTitle>Prijavljivanje</LargeTitle>
           </View>
+          {error && <Alert message={error} type="danger" />}
           <FormFields
             form={form}
             onBlur={onBlurHandler}
@@ -134,4 +139,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(null, { auth })(SignIn);
+export default connect(
+  (state) => ({ error: state.auth.error, loading: state.auth.loading }),
+  { auth }
+)(SignIn);
