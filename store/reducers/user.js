@@ -1,27 +1,27 @@
 import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
-  token: null,
+  user: null,
   error: null,
   loading: false,
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.AUTH_START:
+    case actionTypes.USER_START:
       return {
         ...state,
         error: null,
         loading: true,
       };
-    case actionTypes.AUTH_SUCCESS:
+    case actionTypes.USER_SUCCESS:
       return {
         ...state,
-        token: action.token,
+        user: action.user,
         error: null,
         loading: false,
       };
-    case actionTypes.AUTH_FAIL:
+    case actionTypes.USER_FAIL:
       return {
         ...state,
         error: action.error,
@@ -30,12 +30,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.LOGOUT:
       return {
         ...state,
-        token: null,
-      };
-    case actionTypes.AUTH_CLEAR_ERROR:
-      return {
-        ...state,
-        error: null,
+        user: null,
       };
     default:
       return state;
