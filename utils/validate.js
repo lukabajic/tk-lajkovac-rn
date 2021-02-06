@@ -1,4 +1,4 @@
-export const validate = (field, value) => {
+export const validate = (field, value, form = {}) => {
   let error = null;
   let valid = true;
   switch (field) {
@@ -24,7 +24,7 @@ export const validate = (field, value) => {
       if (!value) {
         error = "Obavezno polje";
         valid = false;
-      } else if (value !== form.values.password) {
+      } else if (value !== form?.values.password) {
         error = "Sifra bi trebalo da se poklapaju.";
         valid = false;
       }

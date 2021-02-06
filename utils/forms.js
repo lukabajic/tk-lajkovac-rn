@@ -17,7 +17,7 @@ export const signInForm = {
       },
     },
     password: {
-      type: "newPassword",
+      type: "password",
       label: "Lozinka",
       placeholder: "********",
       autoFocus: false,

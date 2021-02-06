@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -13,15 +13,17 @@ import FormFields from "../components/FormFields";
 import Button from "../components/Button";
 import Link from "../components/Link";
 import { LargeTitle } from "../components/Typography";
-import { auth } from "../store/actions";
+import { auth, authClearError } from "../store/actions";
 import colors from "../utils/colors";
 import { validate } from "../utils/validate";
 import { signInForm } from "../utils/forms";
 import Alert from "../components/Alert";
 import Loader from "../components/Loader";
 
-const SignIn = ({ auth, error, loading }) => {
+const SignIn = ({ auth, error, loading, authClearError }) => {
   const [form, setForm] = useState(signInForm);
+
+  useEffect(() => () => authClearError(), []);
 
   const onChangeHandler = (field, value) => {
     setForm({
@@ -141,5 +143,5 @@ const styles = StyleSheet.create({
 
 export default connect(
   (state) => ({ error: state.auth.error, loading: state.auth.loading }),
-  { auth }
+  { auth, authClearError }
 )(SignIn);
