@@ -1,1 +1,2 @@
-export { auth, authClearError } from "./auth";
+export { auth, authClearError, logout } from "./auth";
+export { updateData, userClearError } from "./user";

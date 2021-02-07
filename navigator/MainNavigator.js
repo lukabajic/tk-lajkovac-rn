@@ -3,22 +3,14 @@ import { View, Text, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 
 import NoTokenStack from "./NoTokenStack";
+import NoInfoScreen from "../screens/NoInfoScreen";
 
 const MainNavigator = ({ token, user }) => {
   if (!token) return <NoTokenStack />;
 
-  const {
-    data: { displayName, phone },
-  } = user;
+  const { displayName, phone } = user?.data;
 
-  if (!displayName || !phone)
-    return (
-      <View>
-        <Text>Nema</Text>
-        <Text>{displayName}</Text>
-        <Text>{phone}</Text>
-      </View>
-    );
+  if (!displayName || !phone) return <NoInfoScreen />;
 
   return (
     <View style={styles.container}>
