@@ -38,3 +38,28 @@ export const updateData = (token, user, action, displayName, phone) => async (
     dispatch(userFail(err.message || err));
   }
 };
+
+export const fetchCurUser = (token) => async (dispatch) => {
+  dispatch(userStart());
+
+  const URL = SERVER_URL + API + "user/get";
+
+  try {
+    const res = await fetch(URL, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+
+    if (!data.error) {
+      const { user } = data;
+      dispatch(userSuccess(user));
+    } else {
+      dispatch(userFail(data.error));
+    }
+  } catch (err) {
+    dispatch(userFail(err.message || err));
+  }
+};

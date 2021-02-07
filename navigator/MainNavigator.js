@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 import NoTokenStack from "./NoTokenStack";
 import NoInfoScreen from "../screens/NoInfoScreen";
+import PleaseVerifyScreen from "../screens/PleaseVerifyScreen";
 
 const MainNavigator = ({ token, user }) => {
   if (!token) return <NoTokenStack />;
@@ -11,6 +12,10 @@ const MainNavigator = ({ token, user }) => {
   const { displayName, phone } = user.data;
 
   if (!displayName || !phone) return <NoInfoScreen />;
+
+  const { emailVerified } = user;
+
+  if (!emailVerified) return <PleaseVerifyScreen />;
 
   return (
     <View style={styles.container}>

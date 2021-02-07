@@ -79,10 +79,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     shadowColor: "#262322",
     shadowOffset: { height: 2, width: 1 },
-    shadowOpacity: 1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
+    elevation: 5,
     backgroundColor: Colors.white,
-    elevation: 1,
   },
   disabled: {
     backgroundColor: "transparent",
