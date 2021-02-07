@@ -8,7 +8,7 @@ import NoInfoScreen from "../screens/NoInfoScreen";
 const MainNavigator = ({ token, user }) => {
   if (!token) return <NoTokenStack />;
 
-  const { displayName, phone } = user?.data;
+  const { displayName, phone } = user.data;
 
   if (!displayName || !phone) return <NoInfoScreen />;
 
