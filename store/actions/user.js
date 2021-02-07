@@ -28,9 +28,6 @@ export const updateData = (token, user, action, displayName, phone) => async (
     const data = await res.json();
 
     if (!data.error) {
-      const updatedUser = { ...user };
-      updatedUser.data.displayName = displayName;
-
       dispatch(
         userSuccess({ ...user, data: { ...user.data, displayName, phone } })
       );
