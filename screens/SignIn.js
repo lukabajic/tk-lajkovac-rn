@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -6,18 +6,24 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
+import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 
 import FormFields from "../components/FormFields";
 import Button from "../components/Button";
 import Link from "../components/Link";
 import { LargeTitle } from "../components/Typography";
+import { auth, authClearError } from "../store/actions";
 import colors from "../utils/colors";
 import { validate } from "../utils/validate";
-import { signInFom as initialForm } from "../utils/forms";
+import { signInForm } from "../utils/forms";
+import Alert from "../components/Alert";
+import Loader from "../components/Loader";
 
-const SignIn = () => {
-  const [form, setForm] = useState(initialForm);
+const SignIn = ({ auth, error, loading, authClearError }) => {
+  const [form, setForm] = useState(signInForm);
+
+  useEffect(() => () => authClearError(), []);
 
   const onChangeHandler = (field, value) => {
     setForm({
@@ -67,8 +73,10 @@ const SignIn = () => {
 
     auth("/login", email, password);
 
-    setForm(initialForm);
+    setForm(signInForm);
   };
+
+  if (loading) return <Loader />;
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -82,6 +90,7 @@ const SignIn = () => {
           <View style={styles.header}>
             <LargeTitle>Prijavljivanje</LargeTitle>
           </View>
+          {error && <Alert message={error} type="danger" />}
           <FormFields
             form={form}
             onBlur={onBlurHandler}
@@ -132,4 +141,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignIn;
+export default connect(
+  (state) => ({ error: state.auth.error, loading: state.auth.loading }),
+  { auth, authClearError }
+)(SignIn);

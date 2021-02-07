@@ -10,6 +10,7 @@ export const signInForm = {
       label: "Email",
       placeholder: "primer@gmail.com",
       autoFocus: true,
+      keyboardType: "email-address",
       meta: {
         valid: false,
         touched: false,
@@ -17,7 +18,7 @@ export const signInForm = {
       },
     },
     password: {
-      type: "newPassword",
+      type: "password",
       label: "Lozinka",
       placeholder: "********",
       autoFocus: false,
@@ -42,6 +43,7 @@ export const signUpForm = {
       type: "emailAddress",
       label: "Email",
       placeholder: "primer@gmail.com",
+      keyboardType: "email-address",
       autoFocus: true,
       meta: {
         valid: false,
@@ -73,3 +75,36 @@ export const signUpForm = {
     },
   },
 };
+
+export const userDataForm = (user) => ({
+  anyTouched: false,
+  values: {
+    displayName: user?.displayName || "",
+    phone: user?.phone || "",
+  },
+  fields: {
+    displayName: {
+      type: "name",
+      label: "Ime i prezime",
+      placeholder: "Novak Đoković",
+      autoFocus: true,
+      meta: {
+        valid: false,
+        touched: false,
+        error: null,
+      },
+    },
+    phone: {
+      type: "telephoneNumber",
+      label: "Broj telefona",
+      placeholder: "063 982 0611",
+      keyboardType: "numeric",
+      autoFocus: false,
+      meta: {
+        valid: false,
+        touched: false,
+        error: null,
+      },
+    },
+  },
+});

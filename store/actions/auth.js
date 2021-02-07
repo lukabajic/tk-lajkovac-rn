@@ -1,5 +1,6 @@
 import { SERVER_URL, API } from "../../variables";
 import * as actionTypes from "./actionTypes";
+import { userSuccess } from "./user";
 
 export const authStart = () => ({ type: actionTypes.AUTH_START });
 
@@ -11,6 +12,8 @@ export const authSuccess = (token) => ({
 export const authFail = (error) => ({ type: actionTypes.AUTH_FAIL, error });
 
 export const logout = () => ({ type: actionTypes.LOGOUT });
+
+export const authClearError = () => ({ type: actionTypes.AUTH_CLEAR_ERROR });
 
 export const auth = (action, email, password) => async (dispatch) => {
   dispatch(authStart());
@@ -28,9 +31,11 @@ export const auth = (action, email, password) => async (dispatch) => {
     const data = await res.json();
 
     if (!data.error) {
-      const { token, expiresIn } = data;
+      const { token, user /* + expiresIn */ } = data;
 
+      dispatch(userSuccess(user));
       dispatch(authSuccess(token));
+      // add expiration
     } else {
       dispatch(authFail(data.error));
     }

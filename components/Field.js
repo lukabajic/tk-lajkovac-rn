@@ -14,6 +14,7 @@ const Input = ({
   onBlur,
   autoFocus,
   spacing,
+  keyboardType = "default",
   style = {},
 }) => {
   const [focused, setFocused] = useState(false);
@@ -108,6 +109,7 @@ const Input = ({
           selectionColor={Colors.darkGray}
           autoCapitalize={"none"}
           autoCorrect={false}
+          keyboardType={keyboardType}
         />
         {/* {isSecure && focused && (
         <TouchableWithoutFeedback

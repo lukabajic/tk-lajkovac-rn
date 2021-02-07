@@ -16,6 +16,7 @@ const FormFields = ({ form, onChange, onBlur, style = {} }) => (
         onBlur={() => onBlur(field, form.values[field])}
         value={form.values[field]}
         autoFocus={form.fields[field].autoFocus}
+        keyboardType={form.fields[field].keyboardType || "default"}
         spacing={Object.keys(form.fields).length > index}
       />
     ))}
