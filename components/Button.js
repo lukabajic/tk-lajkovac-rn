@@ -11,6 +11,7 @@ const Button = ({ children, style, onPress, disabled, ...props }) => {
 
   props.default && buttonStyles.push(styles.default);
   props.square && buttonStyles.push(styles.square);
+  props.elevated && buttonStyles.push(styles.elevated);
 
   props.primary && buttonStyles.push(styles.primary);
   props.primary && textStyles.push(styles.primaryText);
@@ -70,6 +71,19 @@ const styles = StyleSheet.create({
   secondaryText: { color: Colors.white },
   tertiaryText: { color: Colors.primary },
   fluid: { width: "100%" },
+  elevated: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#262322",
+    shadowOffset: { height: 2, width: 1 },
+    shadowOpacity: 1,
+    shadowRadius: 4,
+    backgroundColor: Colors.white,
+    elevation: 1,
+  },
   disabled: {
     backgroundColor: "transparent",
     borderColor: Colors.gray,
