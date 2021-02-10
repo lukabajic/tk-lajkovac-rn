@@ -20,7 +20,7 @@ import { signInForm } from "../utils/forms";
 import Alert from "../components/Alert";
 import Loader from "../components/Loader";
 
-const SignIn = ({ auth, error, loading, authClearError }) => {
+const SignIn = ({ auth, error, loading, authClearError, navigation }) => {
   const [form, setForm] = useState(signInForm);
 
   useEffect(() => () => authClearError(), []);
@@ -108,10 +108,18 @@ const SignIn = ({ auth, error, loading, authClearError }) => {
           </View>
         </ScrollView>
         <View style={styles.otherActions}>
-          <Link darkGray style={{ textAlign: "center", marginBottom: 18 }}>
+          <Link
+            darkGray
+            style={{ textAlign: "center", marginBottom: 18 }}
+            action={() => {}} // cannot login flow
+          >
             Ne možete da se ulogujete?
           </Link>
-          <Link darkGray style={{ textAlign: "center" }}>
+          <Link
+            darkGray
+            style={{ textAlign: "center" }}
+            action={() => navigation.replace("SignUp")}
+          >
             Nemate nalog?
           </Link>
         </View>
