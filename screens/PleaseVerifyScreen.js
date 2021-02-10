@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView, View, ScrollView, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
@@ -6,8 +6,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { LargeTitle, Callout } from "../components/Typography";
 import Button from "../components/Button";
 import Loader from "../components/Loader";
+import Alert from "../components/Alert";
+import Link from "../components/Link";
 import colors from "../utils/colors";
-import { userClearError, logout, fetchCurUser } from "../store/actions";
+import {
+  userClearError,
+  logout,
+  fetchCurUser,
+  resendVerify,
+} from "../store/actions";
 
 const NoInfoScreen = ({
   error,
@@ -17,7 +24,10 @@ const NoInfoScreen = ({
   userClearError,
   logout,
   fetchCurUser,
+  resendVerify,
 }) => {
+  const [alreadyReSent, setAlreadyReSent] = useState(false);
+
   useEffect(() => () => userClearError(), []);
 
   if (loading) return <Loader />;
@@ -49,6 +59,19 @@ const NoInfoScreen = ({
           </Button>
         </View>
       </ScrollView>
+      <View style={styles.otherActions}>
+        <Link
+          darkGray
+          style={{ textAlign: "center" }}
+          action={() => {
+            setAlreadyReSent(true);
+            resendVerify(token);
+          }}
+          disabled={alreadyReSent}
+        >
+          Pošaljite opet
+        </Link>
+      </View>
     </SafeAreaView>
   );
 };
@@ -87,5 +110,5 @@ export default connect(
     user: state.user.user,
     token: state.auth.token,
   }),
-  { userClearError, logout, fetchCurUser }
+  { userClearError, logout, fetchCurUser, resendVerify }
 )(NoInfoScreen);

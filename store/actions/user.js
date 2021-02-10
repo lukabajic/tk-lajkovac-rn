@@ -63,3 +63,27 @@ export const fetchCurUser = (token) => async (dispatch) => {
     dispatch(userFail(err.message || err));
   }
 };
+
+export const resendVerify = (token) => async (dispatch) => {
+  dispatch(userStart());
+
+  const URL = SERVER_URL + API + "user/resend";
+
+  try {
+    const res = await fetch(URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+
+    if (!data.error) {
+      dispatch(userFail(null));
+    } else {
+      dispatch(userFail(data.error));
+    }
+  } catch (err) {
+    dispatch(userFail(err.message || err));
+  }
+};

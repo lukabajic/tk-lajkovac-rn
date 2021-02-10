@@ -1,2 +1,2 @@
 export { auth, authClearError, logout } from "./auth";
-export { updateData, userClearError, fetchCurUser } from "./user";
+export { updateData, userClearError, fetchCurUser, resendVerify } from "./user";
