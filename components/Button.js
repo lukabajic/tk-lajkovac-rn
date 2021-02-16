@@ -1,5 +1,6 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import Colors from "../utils/colors";
 
@@ -11,7 +12,6 @@ const Button = ({ children, style, onPress, disabled, ...props }) => {
 
   props.default && buttonStyles.push(styles.default);
   props.square && buttonStyles.push(styles.square);
-  props.elevated && buttonStyles.push(styles.elevated);
 
   props.primary && buttonStyles.push(styles.primary);
   props.primary && textStyles.push(styles.primaryText);
@@ -71,19 +71,6 @@ const styles = StyleSheet.create({
   secondaryText: { color: Colors.white },
   tertiaryText: { color: Colors.primary },
   fluid: { width: "100%" },
-  elevated: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#262322",
-    shadowOffset: { height: 2, width: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
-    backgroundColor: Colors.white,
-  },
   disabled: {
     backgroundColor: "transparent",
     borderColor: Colors.gray,

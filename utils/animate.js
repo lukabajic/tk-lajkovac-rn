@@ -6,10 +6,10 @@ export const useInitialValue = (initialValue) => {
   return value;
 };
 
-export const animateTiming = (value, toValue) => {
+export const animateTiming = (value, toValue, duration = 250) => {
   Animated.timing(value, {
-    toValue: toValue,
-    duration: 250,
+    toValue,
+    duration,
     easing: Easing.ease,
     useNativeDriver: true,
   }).start();

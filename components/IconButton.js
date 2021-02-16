@@ -1,14 +1,66 @@
-import React from "react";
-import { Pressable, StyleSheet } from "react-native";
+import React, { useEffect } from "react";
+import { Pressable, StyleSheet, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useIsDrawerOpen } from "@react-navigation/drawer";
 
 import Colors from "../utils/colors";
+import { animateTiming, useInitialValue } from "../utils/animate";
 
-const IconButton = ({ onPress, style, iconName }) => (
-  <Pressable onPress={onPress} style={{ ...styles.wrapper, ...style }}>
-    <Ionicons name={iconName} size={24} color={Colors.darkGray} />
-  </Pressable>
-);
+const IconButton = ({ onPress, style, iconName }) => {
+  const shadowOpacity = useInitialValue(0.2);
+  const shadowRadius = useInitialValue(4);
+  const elevation = useInitialValue(5);
+  const shadowOffsetHeight = useInitialValue(2);
+  const shadowOffsetWidth = useInitialValue(1);
+  const backgroundColor = useInitialValue(0);
+
+  const isDrawerOpen = useIsDrawerOpen();
+
+  useEffect(() => {
+    isDrawerOpen && handlePressOut();
+  }, [isDrawerOpen]);
+
+  const handlePressIn = () => {
+    animateTiming(shadowOpacity, 0, 100);
+    animateTiming(shadowRadius, 0, 100);
+    animateTiming(elevation, 0, 100);
+    animateTiming(shadowOffsetHeight, 0, 100);
+    animateTiming(shadowOffsetWidth, 0, 100);
+    animateTiming(backgroundColor, 0.2, 100);
+  };
+
+  const handlePressOut = () => {
+    animateTiming(shadowOpacity, 0.2, 100);
+    animateTiming(shadowRadius, 4, 100);
+    animateTiming(elevation, 5, 100);
+    animateTiming(shadowOffsetHeight, 2, 100);
+    animateTiming(shadowOffsetWidth, 1, 100);
+    animateTiming(backgroundColor, 0, 100);
+  };
+
+  return (
+    <Animated.View
+      style={{
+        shadowOffset: {
+          height: shadowOffsetHeight,
+          width: shadowOffsetWidth,
+        },
+        shadowOpacity: shadowOpacity,
+        shadowRadius: shadowRadius,
+        elevation: elevation,
+      }}
+    >
+      <Pressable
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={onPress}
+        style={{ ...styles.wrapper, style }}
+      >
+        <Ionicons name={iconName} size={24} color={Colors.darkGray} />
+      </Pressable>
+    </Animated.View>
+  );
+};
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -18,10 +70,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "#262322",
-    shadowOffset: { height: 2, width: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
     backgroundColor: Colors.white,
   },
 });
