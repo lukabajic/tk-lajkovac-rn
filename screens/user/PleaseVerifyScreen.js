@@ -54,9 +54,7 @@ const NoInfoScreen = ({
           </Callout>
         </View>
         <View style={styles.actions}>
-          <Button primary square onPress={() => fetchCurUser(token)}>
-            <Ionicons name="arrow-forward" size={28} color={colors.white} />
-          </Button>
+          <IconButton onPress={logout} name="log-out-outline" />
         </View>
       </ScrollView>
       <View style={styles.otherActions}>

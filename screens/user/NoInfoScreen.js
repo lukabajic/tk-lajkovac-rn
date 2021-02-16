@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { LargeTitle } from "../../components/Typography";
 import Button from "../../components/Button";
+import IconButton from "../../components/IconButton";
 import Loader from "../../components/Loader";
 import { validate } from "../../utils/validate";
 import FormFields from "../../components/FormFields";
@@ -95,9 +96,7 @@ const NoInfoScreen = ({
       >
         <ScrollView bounces={false} contentContainerStyle={styles.form}>
           <View style={styles.logout}>
-            <Button elevated onPress={logout}>
-              <Ionicons name="log-out-outline" size={24} color={colors.black} />
-            </Button>
+            <IconButton onPress={logout} name="log-out-outline" />
           </View>
           <View style={styles.header}>
             <LargeTitle>Vaše informacije</LargeTitle>
