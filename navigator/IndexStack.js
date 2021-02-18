@@ -7,7 +7,7 @@ import IconButton from "../components/IconButton";
 
 const Stack = createStackNavigator();
 
-const NoTokenStack = () => {
+const IndexStack = () => {
   return (
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
@@ -26,4 +26,4 @@ const NoTokenStack = () => {
   );
 };
 
-export default NoTokenStack;
+export default IndexStack;
