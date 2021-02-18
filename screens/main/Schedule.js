@@ -1,14 +1,17 @@
 import React from "react";
+import { connect } from "react-redux";
 import { View, Text, StyleSheet } from "react-native";
 
-const Schedule = () => {
+const Schedule = ({ schedule }) => {
   return (
     <View>
-      <Text>Schedule</Text>
+      <Text>{schedule ? "tu je" : "nema ga"}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({});
 
-export default Schedule;
+export default connect((state) => ({ schedule: state.schedule.schedule }))(
+  Schedule
+);
