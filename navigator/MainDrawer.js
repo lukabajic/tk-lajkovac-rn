@@ -9,7 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 
 import IndexStack from "./IndexStack";
-import ScheduleStack from "./ScheduleStack";
+import ScheduleDaysTabs from "./ScheduleDaysTabs";
 import UsersStack from "./UsersStack";
 import screenOptions from "../utils/screenOptions";
 import { TitleOne } from "../components/Typography";
@@ -73,8 +73,8 @@ const NoTokenDrawer = () => {
         }}
       />
       <Drawer.Screen
-        name="ScheduleStack"
-        component={ScheduleStack}
+        name="ScheduleDaysTabs"
+        component={ScheduleDaysTabs}
         options={{
           title: "Raspored",
           drawerIcon: ({ color }) => (
