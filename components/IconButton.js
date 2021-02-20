@@ -7,10 +7,10 @@ import Colors from "../utils/colors";
 import { animateTiming, useInitialValue } from "../utils/animate";
 
 const IconButton = ({ onPress, style, iconName }) => {
-  const shadowOpacity = useInitialValue(0.2);
-  const shadowRadius = useInitialValue(4);
-  const elevation = useInitialValue(5);
-  const shadowOffsetHeight = useInitialValue(2);
+  const shadowOpacity = useInitialValue(0.75);
+  const shadowRadius = useInitialValue(2);
+  const elevation = useInitialValue(2);
+  const shadowOffsetHeight = useInitialValue(1);
   const shadowOffsetWidth = useInitialValue(1);
   const backgroundColor = useInitialValue(0);
 
@@ -30,10 +30,10 @@ const IconButton = ({ onPress, style, iconName }) => {
   };
 
   const handlePressOut = () => {
-    animateTiming(shadowOpacity, 0.2, 100);
-    animateTiming(shadowRadius, 4, 100);
-    animateTiming(elevation, 5, 100);
-    animateTiming(shadowOffsetHeight, 2, 100);
+    animateTiming(shadowOpacity, 0.5, 100);
+    animateTiming(shadowRadius, 2, 100);
+    animateTiming(elevation, 2, 100);
+    animateTiming(shadowOffsetHeight, 1, 100);
     animateTiming(shadowOffsetWidth, 1, 100);
     animateTiming(backgroundColor, 0, 100);
   };
