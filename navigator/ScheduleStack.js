@@ -12,7 +12,6 @@ const Stack = createStackNavigator();
 
 const ScheduleStack = ({ route }) => {
   const day = route.params?.day;
-  console.log(day);
 
   return (
     <Stack.Navigator
@@ -29,7 +28,11 @@ const ScheduleStack = ({ route }) => {
             <Headline>{getDate(day).string}</Headline>
           </View>
         ),
-        headerLeftContainerStyle: { paddingLeft: 16, paddingTop: 16 },
+        headerLeftContainerStyle: {
+          position: "absolute",
+          top: "50%",
+          left: 16,
+        },
       })}
     >
       <Stack.Screen

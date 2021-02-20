@@ -1,23 +1,25 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { ScrollView, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 
 import Loader from "../../components/Loader";
 import { fetchSchedule } from "../../store/actions";
+import ScheduleBody from "../../components/ScheduleBody";
 
 const Schedule = ({ schedule, fetchSchedule, token, loading, route }) => {
   useEffect(() => {
     if (!schedule) fetchSchedule(token);
   }, [schedule, token, fetchSchedule]);
 
-  if (loading) return <Loader />;
+  if (loading || !schedule) return <Loader />;
 
   const day = route.params?.day;
+  const scheduleDay = schedule && schedule[day];
 
   return (
-    <ScrollView style={styles.screen}>
-      <Text>{schedule ? `${day}tu je` : `${day}nema ga`}</Text>
-    </ScrollView>
+    <View style={styles.screen}>
+      <ScheduleBody schedule={scheduleDay} />
+    </View>
   );
 };
 
