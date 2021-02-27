@@ -4,6 +4,7 @@ import { View, StyleSheet } from "react-native";
 
 import screenOptions from "../utils/screenOptions";
 import Schedule from "../screens/main/Schedule";
+import Booking from "../screens/main/Booking";
 import IconButton from "../components/IconButton";
 import { Headline } from "../components/Typography";
 import getDate from "../utils/getDate";
@@ -23,11 +24,6 @@ const ScheduleStack = ({ route }) => {
             iconName="ios-menu"
           />
         ),
-        headerRight: () => (
-          <View style={styles.date}>
-            <Headline>{getDate(day).string}</Headline>
-          </View>
-        ),
         headerLeftContainerStyle: {
           position: "absolute",
           top: "50%",
@@ -38,8 +34,20 @@ const ScheduleStack = ({ route }) => {
       <Stack.Screen
         name="Schedule"
         component={Schedule}
-        options={{ title: false }}
+        options={{
+          title: false,
+          headerRight: () => (
+            <View style={styles.date}>
+              <Headline>{getDate(day).string}</Headline>
+            </View>
+          ),
+        }}
         initialParams={{ day }}
+      />
+      <Stack.Screen
+        name="Booking"
+        component={Booking}
+        options={{ title: false }}
       />
     </Stack.Navigator>
   );

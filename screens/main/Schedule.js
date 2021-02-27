@@ -6,7 +6,14 @@ import Loader from "../../components/Loader";
 import { fetchSchedule } from "../../store/actions";
 import ScheduleBody from "../../components/ScheduleBody";
 
-const Schedule = ({ schedule, fetchSchedule, token, loading, route }) => {
+const Schedule = ({
+  schedule,
+  fetchSchedule,
+  token,
+  loading,
+  route,
+  navigation,
+}) => {
   useEffect(() => {
     if (!schedule) fetchSchedule(token);
   }, [schedule, token, fetchSchedule]);
@@ -18,7 +25,7 @@ const Schedule = ({ schedule, fetchSchedule, token, loading, route }) => {
 
   return (
     <View style={styles.screen}>
-      <ScheduleBody schedule={scheduleDay} />
+      <ScheduleBody schedule={scheduleDay} day={day} navigation={navigation} />
     </View>
   );
 };
