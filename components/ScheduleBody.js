@@ -5,14 +5,26 @@ import {
   View,
   TouchableOpacity,
   Pressable,
+  Text,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { connect } from "react-redux";
 
-import { TitleTwo, Headline, Subheadline } from "../components/Typography";
+import {
+  TitleTwo,
+  Headline,
+  Subheadline,
+  Footnote,
+} from "../components/Typography";
 import Colors from "../utils/colors";
 import { formatTime } from "../utils/format";
+import { getBackendDate } from "../utils/getDate";
+import Button from "../components/Button";
+import Info from "../components/Info";
+import getDate from "../utils/getDate";
+import { scheduleTime } from "../store/actions";
 
 const ScheduleTime = ({ item, navigation, day, court }) => {
   const { taken, start, end } = item;
@@ -101,15 +113,74 @@ const ScheduleCourt = ({
   );
 };
 
+const AlreadyBooked = ({ day, court, time, scheduleTime, token }) => (
+  <View style={styles.alreadyBooked}>
+    <View style={styles.alreadyBookedContent}>
+      <TitleTwo style={{ marginBottom: 32, marginTop: 16 }}>
+        Već imate zakazan termin za ovaj dan.
+      </TitleTwo>
+      <Info
+        label="Datum"
+        value={getDate(day).string}
+        style={{ marginBottom: 16 }}
+      />
+      <Info
+        label="Teren"
+        value={`Broj ${court}`}
+        style={{ marginBottom: 16 }}
+      />
+      <Info
+        label="Vreme"
+        value={formatTime(time)}
+        style={{ marginBottom: 16 }}
+      />
+    </View>
+
+    <View style={styles.alreadyBookedActions}>
+      <Button
+        tertiary
+        default
+        fluid
+        onPress={() => scheduleTime(token, court, time, day, "cancel")}
+      >
+        Otkaži
+      </Button>
+      <Footnote style={{ textAlign: "center", marginHorizontal: 16 }}>
+        <Text style={{ color: Colors.red }}>Napomena:</Text> Ukoliko otkažete
+        termin imate pravo na zakazivanje termina još samo jednom za isti dan.
+        Budite pažljivi kada zakazujete.
+      </Footnote>
+    </View>
+  </View>
+);
+
+@connect((state) => ({ user: state.user.user, token: state.auth.token }), {
+  scheduleTime,
+})
 class ScheduleBody extends Component {
   state = {
     isSliding: false,
   };
 
   render() {
-    const { schedule, navigation, day } = this.props;
+    const { schedule, navigation, day, user, scheduleTime, token } = this.props;
     const { isSliding } = this.state;
     const windowWidth = Dimensions.get("window").width;
+
+    const hasBooking = user.schedule.find(
+      (b) => b.date === getBackendDate(day)
+    );
+
+    if (hasBooking)
+      return (
+        <AlreadyBooked
+          day={day}
+          time={hasBooking.time}
+          court={hasBooking.court}
+          scheduleTime={scheduleTime}
+          token={token}
+        />
+      );
 
     return (
       <Carousel
@@ -178,6 +249,8 @@ const styles = StyleSheet.create({
   timeFont: { fontVariant: ["tabular-nums"] },
   startTime: { color: Colors.darkGray },
   endTime: { color: Colors.gray },
+  alreadyBooked: { flex: 1 },
+  alreadyBookedContent: { flex: 1 },
 });
 
 export default ScheduleBody;

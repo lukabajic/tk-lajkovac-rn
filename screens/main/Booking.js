@@ -29,7 +29,7 @@ const Booking = ({
   error,
 }) => {
   const { start, end, day, court } = route.params;
-  const [opponenet, setOpponent] = useState("");
+  // const [opponenet, setOpponent] = useState("");
 
   if (loading) return <Loader />;
 
@@ -46,7 +46,7 @@ const Booking = ({
       } else {
         Alert.alert("Zakazano", res, [
           {
-            text: "Nazad",
+            text: "U redu",
             onPress: () => navigation.goBack(),
             style: "cancel",
           },
@@ -70,6 +70,11 @@ const Booking = ({
             style={{ marginBottom: 16 }}
           />
           <Info
+            label="Teren"
+            value={`Broj ${court}`}
+            style={{ marginBottom: 16 }}
+          />
+          <Info
             label="Počinje"
             value={formatTime(start)}
             style={{ marginBottom: 16 }}
@@ -79,19 +84,15 @@ const Booking = ({
             value={formatTime(end)}
             style={{ marginBottom: 16 }}
           />
-          <Field
+          {/* otom potom */}
+          {/* <Field
             label="Ime protivnika"
             onChange={(value) => setOpponent(value)}
             value={opponenet}
             autoFocus={false}
             type="name"
             style={{ marginBottom: 16 }}
-          />
-          <Footnote style={{ textAlign: "center", marginHorizontal: 16 }}>
-            <Text style={{ color: Colors.red }}>Napomena:</Text> Ukoliko
-            otkažete termin imate pravo na zakazivanje termina još samo jednom
-            za isti dan. Budite pažljivi kada zakazujete.
-          </Footnote>
+          /> */}
         </ScrollView>
         <View style={styles.actions}>
           <Button primary default fluid onPress={handleBooking}>

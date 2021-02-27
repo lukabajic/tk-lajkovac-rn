@@ -1,5 +1,7 @@
 import { SERVER_URL, API } from "../../variables";
 import * as actionTypes from "./actionTypes";
+import { userSuccess } from "./user";
+import { getBackendDate } from "../../utils/getDate";
 
 const scheduleStart = () => ({ type: actionTypes.SCHEDULE_START });
 
@@ -63,19 +65,15 @@ export const scheduleTime = (token, court, time, day, action = "") => async (
     const data = await res.json();
 
     if (!data.error) {
-      const schedule = getState().schedule.schedule;
-      const userId = getState().user.user.userId;
+      const schedule = [...getState().schedule.schedule];
 
-      const backendDate = new Date(
-        new Date().setDate(new Date().getDate() + day)
-      ).toDateString();
-      const foundDay = schedule.find((d) => d.date === backendDate);
-      const foundCourt = foundDay.courts.find((c) => c.number === court);
-      const foundTime = foundCourt.times.find((t) => t.start === time);
-      foundTime.taken = action === "cancel" ? false : userId;
-      foundTime.userId = action === "cancel" ? null : true;
+      const { editedUser, editedScheduleDay } = data;
+
+      const index = schedule.findIndex((d) => d.date === getBackendDate(day));
+      schedule[index] = editedScheduleDay;
 
       dispatch(scheduleSuccess(schedule));
+      dispatch(userSuccess(editedUser));
       return data.message;
     } else {
       dispatch(scheduleFail(data.error));

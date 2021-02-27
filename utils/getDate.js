@@ -38,4 +38,7 @@ const getDate = (num) => {
   };
 };
 
+export const getBackendDate = (num) =>
+  new Date(new Date().setDate(new Date().getDate() + num)).toDateString();
+
 export default getDate;
