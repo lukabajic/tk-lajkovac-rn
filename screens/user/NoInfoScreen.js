@@ -96,7 +96,7 @@ const NoInfoScreen = ({
       >
         <ScrollView bounces={false} contentContainerStyle={styles.form}>
           <View style={styles.logout}>
-            <IconButton onPress={logout} name="log-out-outline" />
+            <IconButton onPress={logout} iconName="log-out-outline" />
           </View>
           <View style={styles.header}>
             <LargeTitle>Vaše informacije</LargeTitle>
@@ -145,8 +145,8 @@ const styles = StyleSheet.create({
   },
   logout: {
     position: "absolute",
-    top: 6,
-    right: 6,
+    top: 16,
+    right: 16,
   },
 });
 
