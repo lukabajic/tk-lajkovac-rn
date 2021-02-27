@@ -2,6 +2,7 @@ import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
   token: null,
+  expirationDate: null,
   error: null,
   loading: false,
 };
@@ -18,6 +19,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         token: action.token,
+        expirationDate: action.expirationDate,
         error: null,
         loading: false,
       };
@@ -30,6 +32,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.LOGOUT:
       return {
         ...state,
+        expirationDate: null,
         token: null,
       };
     case actionTypes.AUTH_CLEAR_ERROR:

@@ -5,16 +5,16 @@ import NoTokenStack from "./NoTokenStack";
 import NoInfoScreen from "../screens/user/NoInfoScreen";
 import PleaseVerifyScreen from "../screens/user/PleaseVerifyScreen";
 import MainDrawer from "./MainDrawer";
-import { fetchCurUser } from "../store/actions";
+import { checkExpiration } from "../store/actions";
 import Loader from "../components/Loader";
 
-const MainNavigator = ({ token, user, loading, fetchCurUser }) => {
-  if (!token) return <NoTokenStack />;
-
+const MainNavigator = ({ token, user, loading, checkExpiration }) => {
   if (loading) return <Loader />;
 
+  if (!token) return <NoTokenStack />;
+
   useEffect(() => {
-    if (token && !user) fetchCurUser(token);
+    if (token && !user) checkExpiration();
   }, [token, user]);
 
   const displayName = user?.data?.displayName;
@@ -35,5 +35,5 @@ export default connect(
     user: state.user.user,
     loading: state.user.loading,
   }),
-  { fetchCurUser }
+  { checkExpiration }
 )(MainNavigator);
