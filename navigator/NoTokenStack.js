@@ -1,5 +1,5 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { connect } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import NoTokenIndex from "../screens/auth/NoTokenIndex";
@@ -9,9 +9,14 @@ import screenOptions from "../utils/screenOptions";
 
 const Stack = createStackNavigator();
 
-const NoTokenStack = () => {
+const NoTokenStack = ({ loading }) => {
   return (
-    <Stack.Navigator screenOptions={screenOptions}>
+    <Stack.Navigator
+      screenOptions={{
+        ...screenOptions,
+        headerLeftContainerStyle: { display: loading ? "none" : "flex" },
+      }}
+    >
       <Stack.Screen
         name="NoTokenIndex"
         component={NoTokenIndex}
@@ -31,4 +36,6 @@ const NoTokenStack = () => {
   );
 };
 
-export default NoTokenStack;
+export default connect((state) => ({ loading: state.auth.loading }))(
+  NoTokenStack
+);
