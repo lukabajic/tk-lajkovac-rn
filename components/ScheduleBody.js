@@ -12,8 +12,9 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { TitleTwo, Headline, Subheadline } from "../components/Typography";
 import Colors from "../utils/colors";
+import { formatTime } from "../utils/format";
 
-const ScheduleTime = ({ item }) => {
+const ScheduleTime = ({ item, navigation, day }) => {
   const { taken, start, end } = item;
 
   const scheduleTimeStyles = [styles.scheduleTime];
@@ -22,28 +23,34 @@ const ScheduleTime = ({ item }) => {
   taken && scheduleTimeBeforeStyles.push(styles.scheduleTimeBeforeTaken);
 
   return (
-    <Pressable style={scheduleTimeStyles}>
+    <Pressable
+      style={scheduleTimeStyles}
+      onPress={() => navigation.navigate("Booking", { start, end, day })}
+    >
       <View style={scheduleTimeBeforeStyles} />
       <Headline style={{ color: Colors.darkGray }}>
         {taken ? "Zuazet termin" : "Slobodan termin"}
       </Headline>
       <View style={styles.scheduleWhen}>
-        <Subheadline
-          style={{ color: Colors.darkGray, fontVariant: ["tabular-nums"] }}
-        >
-          {start.slice(0, 2) + "." + start.slice(2, 4)}
+        <Subheadline style={[styles.timeFont, styles.startTime]}>
+          {formatTime(start)}
         </Subheadline>
-        <Subheadline
-          style={{ color: Colors.gray, fontVariant: ["tabular-nums"] }}
-        >
-          {end.slice(0, 2) + "." + end.slice(2, 4)}
+        <Subheadline style={[styles.timeFont, styles.endTime]}>
+          {formatTime(end)}
         </Subheadline>
       </View>
     </Pressable>
   );
 };
 
-const ScheduleCourt = ({ item, onNext, onPrev, isSliding }) => {
+const ScheduleCourt = ({
+  item,
+  onNext,
+  onPrev,
+  isSliding,
+  navigation,
+  day,
+}) => {
   const { number, times } = item;
 
   return (
@@ -77,7 +84,9 @@ const ScheduleCourt = ({ item, onNext, onPrev, isSliding }) => {
         data={times}
         keyExtractor={(item) => item._id}
         ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-        renderItem={({ item }) => <ScheduleTime item={item} />}
+        renderItem={({ item }) => (
+          <ScheduleTime navigation={navigation} item={item} day={day} />
+        )}
       />
     </View>
   );
@@ -89,7 +98,7 @@ class ScheduleBody extends Component {
   };
 
   render() {
-    const { schedule } = this.props;
+    const { schedule, navigation, day } = this.props;
     const { isSliding } = this.state;
     const windowWidth = Dimensions.get("window").width;
 
@@ -105,6 +114,8 @@ class ScheduleBody extends Component {
         onSnapToItem={() => this.setState({ isSliding: false })}
         renderItem={({ item }) => (
           <ScheduleCourt
+            navigation={navigation}
+            day={day}
             isSliding={isSliding}
             item={item}
             onNext={() => this._carousel.snapToNext()}
@@ -155,6 +166,9 @@ const styles = StyleSheet.create({
   scheduleTimeBeforeTaken: {
     backgroundColor: Colors.orange,
   },
+  timeFont: { fontVariant: ["tabular-nums"] },
+  startTime: { color: Colors.darkGray },
+  endTime: { color: Colors.gray },
 });
 
 export default ScheduleBody;
