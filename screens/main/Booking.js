@@ -6,19 +6,54 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   SafeAreaView,
+  Alert,
 } from "react-native";
+import { connect } from "react-redux";
 
 import { formatTime } from "../../utils/format";
 import getDate from "../../utils/getDate";
 import Colors from "../../utils/colors";
+import Loader from "../../components/Loader";
 import Button from "../../components/Button";
 import Info from "../../components/Info";
 import Field from "../../components/Field";
 import { TitleOne, Footnote } from "../../components/Typography";
+import { scheduleTime } from "../../store/actions";
 
-const Booking = ({ route, navigation }) => {
-  const { start, end, day } = route.params;
+const Booking = ({
+  route,
+  navigation,
+  scheduleTime,
+  token,
+  loading,
+  error,
+}) => {
+  const { start, end, day, court } = route.params;
   const [opponenet, setOpponent] = useState("");
+
+  if (loading) return <Loader />;
+
+  const handleBooking = () => {
+    scheduleTime(token, court, start, day).then((res) => {
+      if (!res && error) {
+        Alert.alert("Došlo je do greške", error, [
+          {
+            text: "Nazad",
+            onPress: () => navigation.goBack(),
+            style: "cancel",
+          },
+        ]);
+      } else {
+        Alert.alert("Zakazano", res, [
+          {
+            text: "Nazad",
+            onPress: () => navigation.goBack(),
+            style: "cancel",
+          },
+        ]);
+      }
+    });
+  };
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -59,7 +94,7 @@ const Booking = ({ route, navigation }) => {
           </Footnote>
         </ScrollView>
         <View style={styles.actions}>
-          <Button primary default fluid>
+          <Button primary default fluid onPress={handleBooking}>
             Zakaži
           </Button>
           <Button tertiary default fluid onPress={() => navigation.goBack()}>
@@ -88,4 +123,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Booking;
+export default connect(
+  (state) => ({
+    token: state.auth.token,
+    loading: state.schedule.loading,
+    error: state.schedule.error,
+  }),
+  {
+    scheduleTime,
+  }
+)(Booking);

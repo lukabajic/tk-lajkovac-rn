@@ -14,7 +14,7 @@ import { TitleTwo, Headline, Subheadline } from "../components/Typography";
 import Colors from "../utils/colors";
 import { formatTime } from "../utils/format";
 
-const ScheduleTime = ({ item, navigation, day }) => {
+const ScheduleTime = ({ item, navigation, day, court }) => {
   const { taken, start, end } = item;
 
   const scheduleTimeStyles = [styles.scheduleTime];
@@ -25,7 +25,11 @@ const ScheduleTime = ({ item, navigation, day }) => {
   return (
     <Pressable
       style={scheduleTimeStyles}
-      onPress={() => navigation.navigate("Booking", { start, end, day })}
+      onPress={
+        !taken
+          ? () => navigation.navigate("Booking", { start, end, day, court })
+          : null
+      }
     >
       <View style={scheduleTimeBeforeStyles} />
       <Headline style={{ color: Colors.darkGray }}>
@@ -85,7 +89,12 @@ const ScheduleCourt = ({
         keyExtractor={(item) => item._id}
         ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
         renderItem={({ item }) => (
-          <ScheduleTime navigation={navigation} item={item} day={day} />
+          <ScheduleTime
+            navigation={navigation}
+            item={item}
+            day={day}
+            court={number}
+          />
         )}
       />
     </View>

@@ -1,6 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { View, StyleSheet } from "react-native";
+import { connect } from "react-redux";
 
 import screenOptions from "../utils/screenOptions";
 import Schedule from "../screens/main/Schedule";
@@ -11,43 +12,42 @@ import getDate from "../utils/getDate";
 
 const Stack = createStackNavigator();
 
-const ScheduleStack = ({ route }) => {
+const ScheduleStack = ({ route, loading }) => {
   const day = route.params?.day;
 
   return (
-    <Stack.Navigator
-      screenOptions={({ navigation }) => ({
-        ...screenOptions,
-        headerLeft: () => (
-          <IconButton
-            onPress={() => navigation.openDrawer()}
-            iconName="ios-menu"
-          />
-        ),
-        headerLeftContainerStyle: {
-          position: "absolute",
-          top: "50%",
-          left: 16,
-        },
-      })}
-    >
+    <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
         name="Schedule"
         component={Schedule}
-        options={{
+        options={({ navigation }) => ({
           title: false,
           headerRight: () => (
             <View style={styles.date}>
               <Headline>{getDate(day).string}</Headline>
             </View>
           ),
-        }}
+          headerLeft: () => (
+            <IconButton
+              onPress={() => navigation.openDrawer()}
+              iconName="ios-menu"
+            />
+          ),
+          headerLeftContainerStyle: {
+            position: "absolute",
+            top: "50%",
+            left: 16,
+          },
+        })}
         initialParams={{ day }}
       />
       <Stack.Screen
         name="Booking"
         component={Booking}
-        options={{ title: false }}
+        options={{
+          title: false,
+          headerLeftContainerStyle: { display: loading ? "none" : "flex" },
+        }}
       />
     </Stack.Navigator>
   );
@@ -61,4 +61,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ScheduleStack;
+export default connect((state) => ({ loading: state.schedule.loading }))(
+  ScheduleStack
+);
