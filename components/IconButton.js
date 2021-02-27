@@ -6,7 +6,7 @@ import { useIsDrawerOpen } from "@react-navigation/drawer";
 import Colors from "../utils/colors";
 import { animateTiming, useInitialValue } from "../utils/animate";
 
-const IconButton = ({ onPress, style, iconName }) => {
+const IconButton = ({ onPress, style, iconName, menuButton }) => {
   const shadowOpacity = useInitialValue(0.75);
   const shadowRadius = useInitialValue(2);
   const elevation = useInitialValue(2);
@@ -14,7 +14,7 @@ const IconButton = ({ onPress, style, iconName }) => {
   const shadowOffsetWidth = useInitialValue(1);
   const backgroundColor = useInitialValue(0);
 
-  const isDrawerOpen = useIsDrawerOpen();
+  const isDrawerOpen = menuButton && useIsDrawerOpen();
 
   useEffect(() => {
     isDrawerOpen && handlePressOut();

@@ -7,7 +7,7 @@ import Colors from "../utils/colors";
 
 const Input = ({
   label,
-  type,
+  type = "none",
   meta,
   value,
   onChange,
@@ -40,8 +40,8 @@ const Input = ({
 
   const handleBlur = () => {
     setFocused(false);
-    onBlur();
-    if (value.length > 0) {
+    onBlur && onBlur();
+    if (value?.length > 0) {
       return;
     }
     animateTiming(placeholderAnimate, 1);
@@ -128,9 +128,9 @@ const Input = ({
         </TouchableWithoutFeedback> 
       )}*/}
       </View>
-      {meta.touched && meta.error && (
+      {meta?.touched && meta?.error && (
         <View style={styles.error}>
-          <Text style={styles.errorText}>{meta.error}</Text>
+          <Text style={styles.errorText}>{meta?.error}</Text>
         </View>
       )}
     </View>

@@ -14,11 +14,16 @@ const IndexStack = () => {
         ...screenOptions,
         headerLeft: () => (
           <IconButton
+            menuButton
             onPress={() => navigation.openDrawer()}
             iconName="ios-menu"
           />
         ),
-        headerLeftContainerStyle: { paddingLeft: 16, paddingTop: 16 },
+        headerLeftContainerStyle: {
+          position: "absolute",
+          top: "50%",
+          left: 16,
+        },
       })}
     >
       <Stack.Screen name="Index" component={Index} options={{ title: false }} />
