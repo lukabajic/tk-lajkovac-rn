@@ -6,7 +6,13 @@ import { useIsDrawerOpen } from "@react-navigation/drawer";
 import Colors from "../utils/colors";
 import { animateTiming, useInitialValue } from "../utils/animate";
 
-const IconButton = ({ onPress, style, iconName, menuButton }) => {
+const IconButton = ({
+  contentContainerStyle,
+  onPress,
+  style,
+  iconName,
+  menuButton,
+}) => {
   const shadowOpacity = useInitialValue(0.75);
   const shadowRadius = useInitialValue(2);
   const elevation = useInitialValue(2);
@@ -48,6 +54,7 @@ const IconButton = ({ onPress, style, iconName, menuButton }) => {
         shadowOpacity: shadowOpacity,
         shadowRadius: shadowRadius,
         elevation: elevation,
+        ...contentContainerStyle,
       }}
     >
       <Pressable

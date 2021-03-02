@@ -15,6 +15,7 @@ import {
   fetchCurUser,
   resendVerify,
 } from "../../store/actions";
+import IconButton from "../../components/IconButton";
 
 const NoInfoScreen = ({
   error,
@@ -23,8 +24,8 @@ const NoInfoScreen = ({
   token,
   userClearError,
   logout,
-  fetchCurUser,
   resendVerify,
+  fetchCurUser,
 }) => {
   const [alreadyReSent, setAlreadyReSent] = useState(false);
 
@@ -35,11 +36,11 @@ const NoInfoScreen = ({
   return (
     <SafeAreaView style={styles.screen}>
       <ScrollView bounces={false} contentContainerStyle={styles.form}>
-        <View style={styles.logout}>
-          <Button elevated onPress={logout}>
-            <Ionicons name="log-out-outline" size={24} color={colors.black} />
-          </Button>
-        </View>
+        <IconButton
+          onPress={logout}
+          iconName="log-out-outline"
+          contentContainerStyle={styles.logout}
+        />
         <View style={styles.header}>
           <LargeTitle>Potvrdite email</LargeTitle>
         </View>
@@ -54,7 +55,9 @@ const NoInfoScreen = ({
           </Callout>
         </View>
         <View style={styles.actions}>
-          <IconButton onPress={logout} iconName="log-out-outline" />
+          <Button primary square onPress={() => fetchCurUser(token)}>
+            <Ionicons name="arrow-forward" size={28} color={colors.white} />
+          </Button>
         </View>
       </ScrollView>
       <View style={styles.otherActions}>
@@ -96,9 +99,11 @@ const styles = StyleSheet.create({
   },
   logout: {
     position: "absolute",
-    top: 6,
-    right: 6,
+    top: 16,
+    right: 16,
+    overflow: "visible",
   },
+  actions: {},
 });
 
 export default connect(

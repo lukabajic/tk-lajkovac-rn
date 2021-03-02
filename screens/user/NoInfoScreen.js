@@ -95,9 +95,11 @@ const NoInfoScreen = ({
         style={styles.wrapper}
       >
         <ScrollView bounces={false} contentContainerStyle={styles.form}>
-          <View style={styles.logout}>
-            <IconButton onPress={logout} iconName="log-out-outline" />
-          </View>
+          <IconButton
+            onPress={logout}
+            iconName="log-out-outline"
+            contentContainerStyle={styles.logout}
+          />
           <View style={styles.header}>
             <LargeTitle>Vaše informacije</LargeTitle>
           </View>
@@ -147,7 +149,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 16,
     right: 16,
+    overflow: "visible",
   },
+  actions: {},
 });
 
 export default connect(
