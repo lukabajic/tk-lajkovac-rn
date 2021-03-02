@@ -54,7 +54,7 @@ const NoInfoScreen = ({
           </Callout>
         </View>
         <View style={styles.actions}>
-          <IconButton onPress={logout} name="log-out-outline" />
+          <IconButton onPress={logout} iconName="log-out-outline" />
         </View>
       </ScrollView>
       <View style={styles.otherActions}>
