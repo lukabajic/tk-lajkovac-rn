@@ -51,7 +51,7 @@ const CustomDrawerContent = (props) => (
   </DrawerContentScrollView>
 );
 
-const NoTokenDrawer = () => {
+const MainDrawer = () => {
   return (
     <Drawer.Navigator
       screenOptions={screenOptions}
@@ -130,4 +130,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NoTokenDrawer;
+export default MainDrawer;
