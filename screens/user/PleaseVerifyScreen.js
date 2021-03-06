@@ -13,7 +13,7 @@ import {
   userClearError,
   logout,
   fetchCurUser,
-  resendVerify,
+  resendEmailVerification,
 } from "../../store/actions";
 import IconButton from "../../components/IconButton";
 
@@ -24,7 +24,7 @@ const NoInfoScreen = ({
   token,
   userClearError,
   logout,
-  resendVerify,
+  resendEmailVerification,
   fetchCurUser,
 }) => {
   const [alreadyReSent, setAlreadyReSent] = useState(false);
@@ -66,7 +66,7 @@ const NoInfoScreen = ({
           style={{ textAlign: "center" }}
           action={() => {
             setAlreadyReSent(true);
-            resendVerify(token);
+            resendEmailVerification(token);
           }}
           disabled={alreadyReSent}
         >
@@ -113,5 +113,5 @@ export default connect(
     user: state.user.user,
     token: state.auth.token,
   }),
-  { userClearError, logout, fetchCurUser, resendVerify }
+  { userClearError, logout, fetchCurUser, resendEmailVerification }
 )(NoInfoScreen);
