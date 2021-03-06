@@ -64,7 +64,7 @@ export const fetchCurUser = (token) => async (dispatch) => {
   }
 };
 
-export const resendVerify = (token) => async (dispatch) => {
+export const resendEmailVerification = (token) => async (dispatch) => {
   dispatch(userStart());
 
   const URL = SERVER_URL + API + "user/resend";
@@ -80,6 +80,32 @@ export const resendVerify = (token) => async (dispatch) => {
 
     if (!data.error) {
       dispatch(userFail(null));
+    } else {
+      dispatch(userFail(data.error));
+    }
+  } catch (err) {
+    dispatch(userFail(err.message || err));
+  }
+};
+
+export const resetPassword = (email) => async (dispatch) => {
+  dispatch(userStart());
+
+  const URL = SERVER_URL + API + "user/reset-password";
+
+  try {
+    const res = await fetch(URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+    const data = await res.json();
+
+    if (!data.error) {
+      dispatch(userFail(null));
+      return true;
     } else {
       dispatch(userFail(data.error));
     }
