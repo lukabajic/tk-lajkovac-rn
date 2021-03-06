@@ -111,7 +111,7 @@ const SignIn = ({ auth, error, loading, authClearError, navigation }) => {
           <Link
             darkGray
             style={{ textAlign: "center", marginBottom: 18 }}
-            action={() => {}} // cannot login flow
+            action={() => navigation.navigate("ResetPassword")}
           >
             Ne možete da se ulogujete?
           </Link>
