@@ -1,10 +1,12 @@
 import React from "react";
 import { SafeAreaView, StyleSheet, View, ScrollView } from "react-native";
+import { connect } from "react-redux";
 
 import { LargeTitle, Headline, Callout } from "../../components/Typography";
 import Colors from "../../utils/colors";
 
-const Index = () => {
+const Index = ({ token }) => {
+  console.log(token);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.wrapper}>
@@ -44,4 +46,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+export default connect((state) => ({ token: state.auth.token }))(Index);
