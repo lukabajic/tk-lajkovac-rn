@@ -42,6 +42,6 @@ const NoTokenStack = ({ loading }) => {
   );
 };
 
-export default connect((state) => ({ loading: state.auth.loading }))(
-  NoTokenStack
-);
+export default connect((state) => ({
+  loading: state.auth.loading || state.user.loading,
+}))(NoTokenStack);

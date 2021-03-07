@@ -146,7 +146,7 @@ const ResetPassword = ({
       >
         <ScrollView bounces={false} contentContainerStyle={styles.form}>
           <View style={styles.header}>
-            <LargeTitle style={{ marginBottom: 10 }}>
+            <LargeTitle style={{ marginBottom: 10, textAlign: "center" }}>
               {!email ? "Pošaljite novu lozinku na svoj email" : "Ulogujte se"}
             </LargeTitle>
             {!!email && (
