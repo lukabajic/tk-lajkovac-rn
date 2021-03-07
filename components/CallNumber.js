@@ -1,27 +1,37 @@
 import React from "react";
-import { Linking, Alert, Platform, Pressable, Text } from "react-native";
+import { Linking, Alert, Pressable, Text } from "react-native";
 
 import Colors from "../utils/colors";
 
-const CallNumber = ({ contentContainerStyle, style }) => {
-  const callNumber = (phone) => {
-    let phoneNumber = phone;
-    if (Platform.OS !== "android") {
-      phoneNumber = `telprompt:${phone}`;
-    } else {
-      phoneNumber = `tel:${phone}`;
-    }
-    Linking.canOpenURL(phoneNumber)
-      .then((supported) => {
-        if (!supported) {
-          Alert.alert("Ovo trenutno nije moguće");
-        } else {
-          return Linking.openURL(phoneNumber);
-        }
-      })
-      .catch((err) => console.log(err));
-  };
+export const callNumber = (phone) => {
+  const url = `tel:${phone}`;
 
+  Linking.canOpenURL(url)
+    .then((supported) => {
+      if (!supported) {
+        Alert.alert("Ovo trenutno nije moguće");
+      } else {
+        return Linking.openURL(url);
+      }
+    })
+    .catch((err) => console.log(err));
+};
+
+export const textNumber = (phone) => {
+  const url = `sms:${phone}`;
+
+  Linking.canOpenURL(url)
+    .then((supported) => {
+      if (!supported) {
+        Alert.alert("Ovo trenutno nije moguće");
+      } else {
+        return Linking.openURL(url);
+      }
+    })
+    .catch((err) => console.log(err));
+};
+
+const CallNumber = ({ contentContainerStyle, style }) => {
   return (
     <Pressable
       onPress={() => callNumber("+381628719500")}

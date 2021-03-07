@@ -9,6 +9,7 @@ export const USER_START = "USER_START";
 export const USER_FAIL = "USER_FAIL";
 export const USER_SUCCESS = "USER_SUCCESS";
 export const USER_CLEAR_ERROR = "USER_CLEAR_ERROR";
+export const ALL_USER_SUCCESS = "ALL_USER_SUCCESS";
 
 export const SCHEDULE_START = "SCHEDULE_START";
 export const SCHEDULE_FAIL = "SCHEDULE_FAIL";

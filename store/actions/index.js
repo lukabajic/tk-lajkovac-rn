@@ -5,5 +5,6 @@ export {
   fetchCurUser,
   resendEmailVerification,
   resetPassword,
+  fetchAllUsers,
 } from "./user";
 export { fetchSchedule, scheduleTime } from "./schedule";

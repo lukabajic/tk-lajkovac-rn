@@ -9,6 +9,11 @@ export const userFail = (error) => ({ type: actionTypes.USER_FAIL, error });
 
 export const userClearError = () => ({ type: actionTypes.USER_CLEAR_ERROR });
 
+const allUsersSuccess = (users) => ({
+  type: actionTypes.ALL_USER_SUCCESS,
+  users,
+});
+
 export const updateData = (token, user, action, displayName, phone) => async (
   dispatch
 ) => {
@@ -56,6 +61,31 @@ export const fetchCurUser = (token) => async (dispatch) => {
     if (!data.error) {
       const { user } = data;
       dispatch(userSuccess(user));
+    } else {
+      dispatch(userFail(data.error));
+    }
+  } catch (err) {
+    dispatch(userFail(err.message || err));
+  }
+};
+
+export const fetchAllUsers = (token) => async (dispatch) => {
+  dispatch(userStart());
+
+  const URL = SERVER_URL + API + "user/get-all";
+
+  try {
+    const res = await fetch(URL, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+
+    if (!data.error) {
+      const { users } = data;
+      dispatch(allUsersSuccess(users));
     } else {
       dispatch(userFail(data.error));
     }

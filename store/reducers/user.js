@@ -4,6 +4,7 @@ const initialState = {
   user: null,
   error: null,
   loading: false,
+  users: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -18,6 +19,13 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         user: action.user,
+        error: null,
+        loading: false,
+      };
+    case actionTypes.ALL_USER_SUCCESS:
+      return {
+        ...state,
+        users: action.users,
         error: null,
         loading: false,
       };

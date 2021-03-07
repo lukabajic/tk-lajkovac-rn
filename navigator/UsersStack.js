@@ -18,7 +18,11 @@ const UsersStack = () => {
             iconName="ios-menu"
           />
         ),
-        headerLeftContainerStyle: { paddingLeft: 16, paddingTop: 16 },
+        headerLeftContainerStyle: {
+          position: "absolute",
+          top: "50%",
+          left: 16,
+        },
       })}
     >
       <Stack.Screen name="Users" component={Users} options={{ title: false }} />
