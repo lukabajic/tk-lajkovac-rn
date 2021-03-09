@@ -1,16 +1,25 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { View, StyleSheet } from "react-native";
 import { connect } from "react-redux";
+import { HeaderButtons } from "react-navigation-header-buttons";
 
 import screenOptions from "../utils/screenOptions";
 import Schedule from "../screens/main/Schedule";
 import Booking from "../screens/main/Booking";
-import IconButton from "../components/IconButton";
 import { Headline } from "../components/Typography";
 import getDate from "../utils/getDate";
+import MenuButton from "../components/MenuButton";
+import Colors from "../utils/colors";
 
 const Stack = createStackNavigator();
+
+const Date = ({ day }) => (
+  <HeaderButtons>
+    <Headline style={{ color: Colors.darkGray }}>
+      {getDate(day).string}
+    </Headline>
+  </HeaderButtons>
+);
 
 const ScheduleStack = ({ route, loading }) => {
   const day = route.params?.day;
@@ -22,22 +31,8 @@ const ScheduleStack = ({ route, loading }) => {
         component={Schedule}
         options={({ navigation }) => ({
           title: false,
-          headerRight: () => (
-            <View style={styles.date}>
-              <Headline>{getDate(day).string}</Headline>
-            </View>
-          ),
-          headerLeft: () => (
-            <IconButton
-              onPress={() => navigation.openDrawer()}
-              iconName="ios-menu"
-            />
-          ),
-          headerLeftContainerStyle: {
-            position: "absolute",
-            top: "50%",
-            left: 16,
-          },
+          headerRight: () => <Date day={day} />,
+          headerLeft: () => <MenuButton navigation={navigation} />,
         })}
         initialParams={{ day }}
       />
@@ -52,14 +47,6 @@ const ScheduleStack = ({ route, loading }) => {
     </Stack.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  date: {
-    position: "absolute",
-    top: "50%",
-    right: 16,
-  },
-});
 
 export default connect((state) => ({ loading: state.schedule.loading }))(
   ScheduleStack

@@ -10,6 +10,5 @@ export default {
   },
   headerStyle: {
     backgroundColor: Colors.white,
-    shadowOffset: { height: 0 },
   },
 };

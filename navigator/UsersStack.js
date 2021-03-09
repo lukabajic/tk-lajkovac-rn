@@ -3,7 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import screenOptions from "../utils/screenOptions";
 import Users from "../screens/main/Users";
-import IconButton from "../components/IconButton";
+import MenuButton from "../components/MenuButton";
 
 const Stack = createStackNavigator();
 
@@ -12,17 +12,7 @@ const UsersStack = () => {
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
         ...screenOptions,
-        headerLeft: () => (
-          <IconButton
-            onPress={() => navigation.openDrawer()}
-            iconName="ios-menu"
-          />
-        ),
-        headerLeftContainerStyle: {
-          position: "absolute",
-          top: "50%",
-          left: 16,
-        },
+        headerLeft: () => <MenuButton navigation={navigation} />,
       })}
     >
       <Stack.Screen name="Users" component={Users} options={{ title: false }} />

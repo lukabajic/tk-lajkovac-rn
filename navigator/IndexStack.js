@@ -3,7 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import screenOptions from "../utils/screenOptions";
 import Index from "../screens/main/Index";
-import IconButton from "../components/IconButton";
+import MenuButton from "../components/MenuButton";
 
 const Stack = createStackNavigator();
 
@@ -12,18 +12,7 @@ const IndexStack = () => {
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
         ...screenOptions,
-        headerLeft: () => (
-          <IconButton
-            menuButton
-            onPress={() => navigation.openDrawer()}
-            iconName="ios-menu"
-          />
-        ),
-        headerLeftContainerStyle: {
-          position: "absolute",
-          top: "50%",
-          left: 16,
-        },
+        headerLeft: () => <MenuButton navigation={navigation} />,
       })}
     >
       <Stack.Screen name="Index" component={Index} options={{ title: false }} />
