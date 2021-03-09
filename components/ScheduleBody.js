@@ -26,11 +26,12 @@ import Info from "../components/Info";
 import getDate from "../utils/getDate";
 import { scheduleTime } from "../store/actions";
 
-const ScheduleTime = ({ item, navigation, day, court }) => {
+export const ScheduleTime = ({ item, navigation, day, court, notLast }) => {
   const { taken, start, end } = item;
 
   const scheduleTimeStyles = [styles.scheduleTime];
   taken && scheduleTimeStyles.push(styles.scheduleTimeTaken);
+  notLast && scheduleTimeStyles.push(styles.marginBottom);
   const scheduleTimeBeforeStyles = [styles.scheduleTimeBefore];
   taken && scheduleTimeBeforeStyles.push(styles.scheduleTimeBeforeTaken);
 
@@ -39,7 +40,10 @@ const ScheduleTime = ({ item, navigation, day, court }) => {
       style={scheduleTimeStyles}
       onPress={
         !taken
-          ? () => navigation.navigate("Booking", { start, end, day, court })
+          ? async () => {
+              await navigation.navigate("ScheduleDaysTabs");
+              navigation.navigate("Booking", { start, end, day, court });
+            }
           : null
       }
     >
@@ -251,6 +255,7 @@ const styles = StyleSheet.create({
   endTime: { color: Colors.gray },
   alreadyBooked: { flex: 1 },
   alreadyBookedContent: { flex: 1 },
+  marginBottom: { marginBottom: 12 },
 });
 
 export default ScheduleBody;

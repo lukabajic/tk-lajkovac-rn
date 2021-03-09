@@ -1,25 +1,129 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView, StyleSheet, View, ScrollView } from "react-native";
 import { connect } from "react-redux";
 
-import { LargeTitle, Headline, Callout } from "../../components/Typography";
+import { LargeTitle, TitleTwo, Subheadline } from "../../components/Typography";
 import Colors from "../../utils/colors";
+import Button from "../../components/Button";
+import { ScheduleTime } from "../../components/ScheduleBody";
+import { fetchSchedule } from "../../store/actions";
+import Loader from "../../components/Loader";
+import { getBackendDate } from "../../utils/getDate";
 
-const Index = ({ token }) => {
-  console.log(token);
+const selectQuickTimes = (schedule) => {
+  if (!schedule) return [];
+
+  const courts = schedule.find((d) => d.date === getBackendDate(0)).courts;
+
+  const times = [];
+
+  courts.forEach((c) =>
+    c.times.forEach((t) => {
+      const hours = 8 || new Date().getHours();
+      const startHour = Number(t.start.slice(0, 2));
+
+      if (hours === startHour) {
+        const minutes = new Date().getMinutes();
+        const startMinute = Number(t.start.slice(2, 4));
+
+        if (minutes > startMinute) return;
+      }
+
+      if (hours > startHour) return;
+
+      t.court = c.number;
+      times.push(t);
+    })
+  );
+
+  times.sort((a, b) => {
+    const aHours = Number(a.start.slice(0, 2));
+    const bHours = Number(b.start.slice(0, 2));
+    const aMinutes = Number(a.start.slice(2, 4));
+    const bMinutes = Number(b.start.slice(2, 4));
+
+    if (aHours === bHours) return aMinutes - bMinutes;
+
+    return aHours - bHours;
+  });
+
+  return times.slice(0, 3);
+};
+
+const QuickSchedule = connect(
+  (state) => ({
+    token: state.auth.token,
+    schedule: state.schedule.schedule,
+    loading: state.schedule.loading,
+  }),
+  {
+    fetchSchedule,
+  }
+)(({ schedule, token, fetchSchedule, loading, navigation }) => {
+  useEffect(() => {
+    if (!schedule) fetchSchedule(token);
+  }, [schedule, token, fetchSchedule]);
+
+  const times = selectQuickTimes(schedule);
+
+  return (
+    <View style={[styles.quickSchedule, styles.withBorder]}>
+      {loading ? (
+        <Loader contentContainerStyle={{ marginVertical: 32 }} />
+      ) : times.length ? (
+        times.map((t, i) => (
+          <ScheduleTime
+            key={i}
+            item={t}
+            day={0}
+            court={t.court}
+            navigation={navigation}
+            notLast={i + 1 < times.length}
+          />
+        ))
+      ) : (
+        <Subheadline style={{ textAlign: "center" }}>
+          Nema slobodnih termina do kraja dana
+        </Subheadline>
+      )}
+    </View>
+  );
+});
+
+const Index = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.wrapper}>
-        <LargeTitle style={{ color: Colors.black }}>TK Lajkovac</LargeTitle>
-        <Headline style={{ color: Colors.black }}>Zvanična aplikacija</Headline>
-        <View style={styles.info}>
-          <Callout style={[styles.callout, { marginBottom: 8 }]}>
-            Zakazivanje termina besplatno, online.
-          </Callout>
-          <Callout style={[styles.callout, { marginBottom: 8 }]}>
-            Kontaktirajte druge članove.
-          </Callout>
-          <Callout style={styles.callout}>Pratite rezultate lige.</Callout>
+        <View style={styles.section}>
+          <LargeTitle style={{ color: Colors.black, textAlign: "center" }}>
+            TK Lajkovac
+          </LargeTitle>
+          <LargeTitle style={{ color: Colors.black, textAlign: "center" }}>
+            Zvanična aplikacija
+          </LargeTitle>
+        </View>
+        <View style={styles.section}>
+          <TitleTwo style={styles.callToAction}>Brzo zakazivanje</TitleTwo>
+          <QuickSchedule navigation={navigation} />
+          <Button
+            primary
+            fluid
+            default
+            onPress={() => navigation.navigate("ScheduleDaysTabs")}
+          >
+            Pregledaj sve
+          </Button>
+        </View>
+        <View style={styles.section}>
+          <TitleTwo style={styles.callToAction}> Tražite protivnika?</TitleTwo>
+          <Button
+            primary
+            fluid
+            default
+            onPress={() => navigation.navigate("UsersStack")}
+          >
+            Pregledaj članove
+          </Button>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -44,6 +148,24 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 18,
   },
+  section: {
+    width: "100%",
+    marginBottom: 32,
+  },
+  withBorder: {
+    borderColor: "rgba(38,35,34,0.1)",
+    borderWidth: 1,
+    borderRadius: 4,
+    padding: 16,
+    marginVertical: 8,
+  },
+  callToAction: {
+    textAlign: "center",
+  },
+  news: {},
+  quickSchedule: {
+    width: "100%",
+  },
 });
 
-export default connect((state) => ({ token: state.auth.token }))(Index);
+export default Index;

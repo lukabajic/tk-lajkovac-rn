@@ -3,8 +3,8 @@ import { ActivityIndicator, View, StyleSheet } from "react-native";
 
 import Colors from "../utils/colors";
 
-const Loader = () => (
-  <View style={styles.container}>
+const Loader = ({ contentContainerStyle }) => (
+  <View style={[styles.container, contentContainerStyle]}>
     <ActivityIndicator color={Colors.primary} size="large" />
   </View>
 );
