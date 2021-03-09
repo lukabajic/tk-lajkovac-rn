@@ -8,27 +8,48 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
+import { createStackNavigator } from "@react-navigation/stack";
 
 import { LargeTitle } from "../../components/Typography";
 import Button from "../../components/Button";
-import IconButton from "../../components/IconButton";
 import Loader from "../../components/Loader";
 import { validate } from "../../utils/validate";
 import FormFields from "../../components/FormFields";
 import Alert from "../../components/Alert";
 import { userDataForm } from "../../utils/forms";
 import colors from "../../utils/colors";
-import { updateData, userClearError, logout } from "../../store/actions";
+import { updateData, userClearError } from "../../store/actions";
+import LogoutButton from "../../components/LogoutButton";
+import screenOptions from "../../utils/screenOptions";
 
-const NoInfoScreen = ({
-  error,
-  loading,
-  user,
-  updateData,
-  token,
-  userClearError,
-  logout,
-}) => {
+const Stack = createStackNavigator();
+
+const NoInfoStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        ...screenOptions,
+        headerRight: () => <LogoutButton />,
+      }}
+    >
+      <Stack.Screen
+        name="NoInfoScreen"
+        component={NoInfoScreen}
+        options={{ title: false }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const NoInfoScreen = connect(
+  (state) => ({
+    loading: state.user.loading,
+    error: state.user.error,
+    user: state.user.user,
+    token: state.auth.token,
+  }),
+  { updateData, userClearError }
+)(({ error, loading, user, updateData, token, userClearError }) => {
   const [form, setForm] = useState(userDataForm(user));
 
   useEffect(() => () => userClearError(), []);
@@ -89,17 +110,11 @@ const NoInfoScreen = ({
   return (
     <SafeAreaView style={styles.screen}>
       <KeyboardAvoidingView
-        // android add
         behavior={Platform.OS === "ios" ? "padding" : null}
         keyboardVerticalOffset={40}
         style={styles.wrapper}
       >
         <ScrollView bounces={false} contentContainerStyle={styles.form}>
-          <IconButton
-            onPress={logout}
-            iconName="log-out-outline"
-            contentContainerStyle={styles.logout}
-          />
           <View style={styles.header}>
             <LargeTitle>Vaše informacije</LargeTitle>
           </View>
@@ -123,7 +138,7 @@ const NoInfoScreen = ({
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   screen: {
@@ -145,21 +160,7 @@ const styles = StyleSheet.create({
   inputs: {
     marginBottom: 20,
   },
-  logout: {
-    position: "absolute",
-    top: 16,
-    right: 16,
-    overflow: "visible",
-  },
   actions: {},
 });
 
-export default connect(
-  (state) => ({
-    loading: state.user.loading,
-    error: state.user.error,
-    user: state.user.user,
-    token: state.auth.token,
-  }),
-  { updateData, userClearError, logout }
-)(NoInfoScreen);
+export default NoInfoStack;

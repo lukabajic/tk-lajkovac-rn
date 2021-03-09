@@ -1,5 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text, SafeAreaView, StyleSheet } from "react-native";
@@ -9,9 +10,26 @@ import Colors from "../utils/colors";
 import { getBackendDate } from "../utils/getDate";
 import { LargeTitle, Headline } from "../components/Typography";
 import CallNumber from "../components/CallNumber";
-import IconButton from "../components/IconButton";
+import MenuButton from "../components/MenuButton";
+import screenOptions from "../utils/screenOptions";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+const NotPossibleStack = () => (
+  <Stack.Navigator
+    screenOptions={({ navigation }) => ({
+      ...screenOptions,
+      headerLeft: () => <MenuButton navigation={navigation} />,
+    })}
+  >
+    <Stack.Screen
+      name="NotPossible"
+      component={NotPossible}
+      options={{ title: false }}
+    />
+  </Stack.Navigator>
+);
 
 const NotPossible = ({ navigation }) => {
   const oClock = new Date().getHours();
@@ -19,12 +37,6 @@ const NotPossible = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.wrapper}>
-        <IconButton
-          menuButton
-          onPress={() => navigation.openDrawer()}
-          iconName="ios-menu"
-          contentContainerStyle={{ position: "absolute", top: 6, left: 16 }}
-        />
         <LargeTitle style={[styles.center, styles.marginBottom]}>
           TK Lajkovac
         </LargeTitle>
@@ -65,11 +77,11 @@ const styles = StyleSheet.create({
 
 const ScheduleDayBottom = connect((state) => ({
   schedule: state.schedule.schedule,
-}))(({ schedule, navigation }) => {
+}))(({ schedule }) => {
   const yesterdayDate = getBackendDate(-1);
   const hasYesterday = Boolean(schedule?.find((d) => d.date === yesterdayDate));
 
-  if (hasYesterday) return <NotPossible navigation={navigation} />;
+  if (hasYesterday) return <NotPossibleStack />;
 
   return (
     <Tab.Navigator

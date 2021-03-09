@@ -1,4 +1,10 @@
-export { auth, authClearError, logout, checkExpiration } from "./auth";
+export {
+  auth,
+  authClearError,
+  logout,
+  checkExpiration,
+  authFail,
+} from "./auth";
 export {
   updateData,
   userClearError,

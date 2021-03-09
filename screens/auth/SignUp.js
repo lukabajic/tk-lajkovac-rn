@@ -14,16 +14,27 @@ import Button from "../../components/Button";
 import Link from "../../components/Link";
 import { LargeTitle } from "../../components/Typography";
 import colors from "../../utils/colors";
-import { auth, authClearError } from "../../store/actions";
+import { auth, authClearError, authFail } from "../../store/actions";
 import { validate } from "../../utils/validate";
 import { signUpForm } from "../../utils/forms";
 import Loader from "../../components/Loader";
 import Alert from "../../components/Alert";
 
-const SignUp = ({ auth, error, loading, authClearError, navigation }) => {
+const SignUp = ({
+  auth,
+  error,
+  loading,
+  authClearError,
+  authFail,
+  navigation,
+}) => {
   const [form, setForm] = useState(signUpForm);
+  console.log(error);
 
-  useEffect(() => () => authClearError(), []);
+  useEffect(() => {
+    authFail(null);
+    return () => authClearError();
+  }, []);
 
   const onChangeHandler = (field, value) => {
     setForm({
@@ -146,5 +157,5 @@ const styles = StyleSheet.create({
 
 export default connect(
   (state) => ({ error: state.auth.error, loading: state.auth.loading }),
-  { auth, authClearError }
+  { auth, authClearError, authFail }
 )(SignUp);

@@ -13,17 +13,27 @@ import FormFields from "../../components/FormFields";
 import Button from "../../components/Button";
 import Link from "../../components/Link";
 import { LargeTitle } from "../../components/Typography";
-import { auth, authClearError } from "../../store/actions";
+import { auth, authClearError, authFail } from "../../store/actions";
 import colors from "../../utils/colors";
 import { validate } from "../../utils/validate";
 import { signInForm } from "../../utils/forms";
 import Alert from "../../components/Alert";
 import Loader from "../../components/Loader";
 
-const SignIn = ({ auth, error, loading, authClearError, navigation }) => {
+const SignIn = ({
+  auth,
+  error,
+  loading,
+  authClearError,
+  authFail,
+  navigation,
+}) => {
   const [form, setForm] = useState(signInForm);
 
-  useEffect(() => () => authClearError(), []);
+  useEffect(() => {
+    authFail(null);
+    return () => authClearError();
+  }, []);
 
   const onChangeHandler = (field, value) => {
     setForm({
@@ -81,7 +91,6 @@ const SignIn = ({ auth, error, loading, authClearError, navigation }) => {
   return (
     <SafeAreaView style={styles.screen}>
       <KeyboardAvoidingView
-        // android add
         behavior={Platform.OS === "ios" ? "padding" : null}
         keyboardVerticalOffset={40}
         style={styles.wrapper}
@@ -151,5 +160,5 @@ const styles = StyleSheet.create({
 
 export default connect(
   (state) => ({ error: state.auth.error, loading: state.auth.loading }),
-  { auth, authClearError }
+  { auth, authClearError, authFail }
 )(SignIn);
