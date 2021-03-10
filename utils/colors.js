@@ -6,9 +6,9 @@ export default {
   darkGray: "#343a40",
   black: "#212529",
   /* colors */
+  blue: "#264653",
+  yellow: "#e9c46a",
+  orange: "#f4a261",
+  red: "#e76f51",
   primary: "#2a9d8f",
-  yellow: "#ffcc00",
-  orange: "#ff9500",
-  red: "#ff3b30",
-  blue: "#06c",
 };
