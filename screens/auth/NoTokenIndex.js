@@ -6,14 +6,18 @@ import {
   Image,
   ScrollView,
 } from "react-native";
+import { connect } from "react-redux";
 
 import { LargeTitle, Headline, Callout } from "../../components/Typography";
 import Button from "../../components/Button";
+import Loader from "../../components/Loader";
 import Colors from "../../utils/colors";
 
 import image from "../../assets/banner.png";
 
-const NoTokenIndex = ({ navigation }) => {
+const NoTokenIndex = ({ navigation, loading }) => {
+  if (loading) return <Loader />;
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.wrapper}>
@@ -76,4 +80,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NoTokenIndex;
+export default connect((state) => ({ loading: state.user.loading }))(
+  NoTokenIndex
+);
