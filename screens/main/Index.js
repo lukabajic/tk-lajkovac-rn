@@ -13,11 +13,11 @@ import { getBackendDate } from "../../utils/getDate";
 const selectQuickTimes = (schedule) => {
   if (!schedule) return [];
 
-  const courts = schedule.find((d) => d.date === getBackendDate(0)).courts;
+  const courts = schedule?.find((d) => d.date === getBackendDate(0))?.courts;
 
   const times = [];
 
-  courts.forEach((c) =>
+  courts?.forEach((c) =>
     c.times.forEach((t) => {
       const hours = 8 || new Date().getHours();
       const startHour = Number(t.start.slice(0, 2));
