@@ -21,7 +21,7 @@ const Alert = ({ type, message }) => {
       <Ionicons
         name="alert-circle-outline"
         size={24}
-        color={type === "danger" ? colors.orange : colors.primary}
+        color={type === "danger" ? colors.red : colors.primary}
       />
       <Text style={textStyles}>{message}</Text>
     </View>
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
   },
   danger: {
-    borderColor: Colors.orange,
+    borderColor: Colors.red,
   },
   text: {
     fontSize: 16,
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     color: Colors.primary,
   },
   dangerText: {
-    color: Colors.orange,
+    color: Colors.red,
   },
 });
 
