@@ -20,15 +20,19 @@ const BookingIcon = ({ isBooked }) => (
   <Ionicons
     name={isBooked ? "checkmark-circle" : "checkmark-circle-outline"}
     size={24}
-    color={isBooked ? Colors.orange : Colors.primary}
+    color={isBooked ? Colors.yellow : Colors.primary}
     style={{ marginRight: 2 }}
   />
 );
 
 const HeaderBooking = ({ schedule, isPremium }) => {
-  const hasBookingToday = schedule.find((d) => d.date === getBackendDate(0));
-  const hasBookingTomorrow = schedule.find((d) => d.date === getBackendDate(1));
-  const hasBookingDayAfter = schedule.find((d) => d.date === getBackendDate(2));
+  const hasBookingToday = schedule?.find((d) => d.date === getBackendDate(0));
+  const hasBookingTomorrow = schedule?.find(
+    (d) => d.date === getBackendDate(1)
+  );
+  const hasBookingDayAfter = schedule?.find(
+    (d) => d.date === getBackendDate(2)
+  );
 
   return (
     <View style={styles.userSchedule}>

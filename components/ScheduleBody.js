@@ -171,7 +171,7 @@ class ScheduleBody extends Component {
     const { isSliding } = this.state;
     const windowWidth = Dimensions.get("window").width;
 
-    const hasBooking = user.schedule.find(
+    const hasBooking = user.schedule?.find(
       (b) => b.date === getBackendDate(day)
     );
 
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
   },
   scheduleTimeBeforeTaken: {
-    backgroundColor: Colors.orange,
+    backgroundColor: Colors.yellow,
   },
   timeFont: { fontVariant: ["tabular-nums"] },
   startTime: { color: Colors.darkGray },
