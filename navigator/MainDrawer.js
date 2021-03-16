@@ -6,11 +6,12 @@ import {
 } from "@react-navigation/drawer";
 import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 
 import IndexStack from "./IndexStack";
 import ScheduleDaysTabs from "./ScheduleDaysTabs";
 import UsersStack from "./UsersStack";
+import SettingsStack from "./SettingsStack";
 import screenOptions from "../utils/screenOptions";
 import { TitleOne } from "../components/Typography";
 import Colors from "../utils/colors";
@@ -27,29 +28,51 @@ const UserInfo = connect((state) => ({ user: state.user.user }))(({ user }) => (
   </View>
 ));
 
-const BottomItems = connect(null, { logout })(({ logout }) => (
+const BottomItems = connect(null, { logout })(({ logout, navigation }) => (
   <View style={styles.bottom}>
-    <TouchableOpacity style={[styles.bottomItem, styles.bottomItemNotLast]}>
-      <Ionicons name="cog-outline" size={28} color={Colors.darkGray} />
+    <TouchableOpacity
+      style={[styles.bottomItem, styles.bottomItemNotLast]}
+      onPress={() => navigation.navigate("SettingsStack")}
+    >
+      <Ionicons name="ios-cog-outline" size={28} color={Colors.darkGray} />
     </TouchableOpacity>
-    <TouchableOpacity style={[styles.bottomItem, styles.bottomItemNotLast]}>
-      <Ionicons name="ios-help-outline" size={28} color={Colors.darkGray} />
+    <TouchableOpacity
+      style={[styles.bottomItem, styles.bottomItemNotLast]}
+      disabled
+      // onPress={() => navigation.navigate("HelpStack")}
+    >
+      <Ionicons name="ios-help-outline" size={28} color={Colors.lightGray} />
     </TouchableOpacity>
     <TouchableOpacity style={styles.bottomItem} onPress={logout}>
-      <Ionicons name="log-out-outline" size={28} color={Colors.darkGray} />
+      <Ionicons name="ios-log-out-outline" size={28} color={Colors.darkGray} />
     </TouchableOpacity>
   </View>
 ));
 
-const CustomDrawerContent = (props) => (
-  <DrawerContentScrollView {...props}>
-    <UserInfo />
-    <View style={styles.list}>
-      <DrawerItemList {...props} />
-    </View>
-    <BottomItems />
-  </DrawerContentScrollView>
-);
+const CustomDrawerContent = ({ state, ...rest }) => {
+  const newState = { ...state };
+  newState.routes = state.routes.filter(
+    (i) => !["SettingsStack", "HelpStack"].includes(i.name)
+  );
+
+  return (
+    <DrawerContentScrollView {...rest}>
+      <UserInfo />
+      <View style={styles.list}>
+        <DrawerItemList state={newState} {...rest} />
+        <View style={styles.soon}>
+          <Ionicons
+            name="ios-tennisball-outline"
+            size={24}
+            color={Colors.gray}
+          />
+          <Text style={styles.soonText}>Liga (uskoro)</Text>
+        </View>
+      </View>
+      <BottomItems navigation={rest.navigation} />
+    </DrawerContentScrollView>
+  );
+};
 
 const MainDrawer = () => {
   return (
@@ -68,7 +91,7 @@ const MainDrawer = () => {
         options={{
           title: "Početna",
           drawerIcon: ({ color }) => (
-            <Ionicons name="home-outline" size={24} color={color} />
+            <Ionicons name="ios-home-outline" size={24} color={color} />
           ),
         }}
       />
@@ -78,7 +101,7 @@ const MainDrawer = () => {
         options={{
           title: "Raspored",
           drawerIcon: ({ color }) => (
-            <Ionicons name="calendar-outline" size={24} color={color} />
+            <Ionicons name="ios-calendar-outline" size={24} color={color} />
           ),
         }}
       />
@@ -88,7 +111,17 @@ const MainDrawer = () => {
         options={{
           title: "Članovi",
           drawerIcon: ({ color }) => (
-            <Ionicons name="people-outline" size={24} color={color} />
+            <Ionicons name="ios-people-outline" size={24} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="SettingsStack"
+        component={SettingsStack}
+        options={{
+          title: "Podešavanja",
+          drawerIcon: ({ color }) => (
+            <Ionicons name="ios-cog-outline" size={24} color={color} />
           ),
         }}
       />
@@ -127,6 +160,16 @@ const styles = StyleSheet.create({
   bottomItemNotLast: {
     borderRightColor: "rgba(38, 35, 34, 0.2)",
     borderRightWidth: 1,
+  },
+  soon: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: 17,
+    marginTop: 10,
+  },
+  soonText: {
+    marginLeft: 34,
+    color: Colors.gray,
   },
 });
 
