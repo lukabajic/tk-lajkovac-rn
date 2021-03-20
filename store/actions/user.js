@@ -14,9 +14,7 @@ const allUsersSuccess = (users) => ({
   users,
 });
 
-export const updateData = (token, user, action, displayName, phone) => async (
-  dispatch
-) => {
+export const updateData = (token, action, body) => async (dispatch) => {
   dispatch(userStart());
 
   const URL = SERVER_URL + API + "user/edit";
@@ -28,14 +26,12 @@ export const updateData = (token, user, action, displayName, phone) => async (
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ action, payload: { displayName, phone } }),
+      body: JSON.stringify({ action, payload: body }),
     });
     const data = await res.json();
 
     if (!data.error) {
-      dispatch(
-        userSuccess({ ...user, data: { ...user.data, displayName, phone } })
-      );
+      dispatch(userSuccess(data.user));
     } else {
       dispatch(userFail(data.error));
     }
