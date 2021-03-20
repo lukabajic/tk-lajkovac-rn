@@ -149,11 +149,11 @@ const AlreadyBooked = ({ day, court, time, scheduleTime, token }) => (
       >
         Otkaži
       </Button>
-      <Footnote style={{ textAlign: "center", marginHorizontal: 16 }}>
+      {/* <Footnote style={{ textAlign: "center", marginHorizontal: 16 }}>
         <Text style={{ color: Colors.red }}>Napomena:</Text> Ukoliko otkažete
         termin imate pravo na zakazivanje termina još samo jednom za isti dan.
         Budite pažljivi kada zakazujete.
-      </Footnote>
+      </Footnote> */}
     </View>
   </View>
 );
