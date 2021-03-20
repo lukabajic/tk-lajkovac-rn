@@ -100,7 +100,7 @@ const NoInfoScreen = connect(
   const onSubmit = () => {
     const { displayName, phone } = form.values;
 
-    updateData(token, user, "SET_INITIAL_DATA", displayName, phone);
+    updateData(token, "SET_INITIAL_DATA", { displayName, phone });
 
     setForm(userDataForm(user));
   };
