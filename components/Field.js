@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextInput, View, StyleSheet, Animated, Text } from "react-native";
 // import { Ionicons } from "@expo/vector-icons";
 
@@ -16,9 +16,15 @@ const Input = ({
   spacing,
   keyboardType = "default",
   style = {},
+  filled,
 }) => {
   const [focused, setFocused] = useState(false);
   // const [displayPassword, setDisplayPassowrd] = useState(false);
+
+  useEffect(() => {
+    handleFocus();
+    handleBlur();
+  }, [filled]);
 
   const placeholderAnimate = useInitialValue(1);
   const placeholderLeftPos = useInitialValue(0);
