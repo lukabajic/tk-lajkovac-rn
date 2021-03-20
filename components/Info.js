@@ -3,18 +3,25 @@ import { View, StyleSheet, Text } from "react-native";
 
 import Colors from "../utils/colors";
 
-const Info = ({ style = {}, label, value }) => (
-  <View style={[styles.wrapper, style]}>
-    <Text style={styles.label}>{label}</Text>
-    <Text style={styles.value}>{value}</Text>
-  </View>
-);
+const Info = ({ style = {}, label, value, spacing }) => {
+  const parentStyles = [styles.wrapper, style];
+  spacing && parentStyles.push(styles.marginBottom);
+
+  return (
+    <View style={parentStyles}>
+      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.value}>{value}</Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: "transparent",
     position: "relative",
     height: 50,
+    width: "100%",
+    maxWidth: 320,
   },
   label: {
     position: "absolute",
@@ -37,6 +44,9 @@ const styles = StyleSheet.create({
     letterSpacing: 1.28,
     fontWeight: "700",
     color: Colors.black,
+  },
+  marginBottom: {
+    marginBottom: 16,
   },
 });
 
