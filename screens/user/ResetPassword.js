@@ -50,7 +50,7 @@ const LOGIN_FORM = {
       type: "password",
       label: "Lozinka",
       placeholder: "********",
-      autoFocus: false,
+      autoFocus: true,
       meta: {
         valid: false,
         touched: false,
@@ -71,6 +71,12 @@ const ResetPassword = ({
   const [form, setForm] = useState(INITIAL_FORM);
 
   useEffect(() => () => userClearError(), []);
+
+  useEffect(() => {
+    if (email) {
+      setForm(LOGIN_FORM);
+    }
+  }, [email]);
 
   const onChangeHandler = (field, value) => {
     setForm({
@@ -121,7 +127,6 @@ const ResetPassword = ({
     try {
       await resetPassword(email);
 
-      setForm(LOGIN_FORM);
       setEmail(email);
     } catch (err) {
       console.warn(err);
@@ -222,7 +227,7 @@ const styles = StyleSheet.create({
 export default connect(
   (state) => ({
     loading: state.user.loading || state.auth.loading,
-    error: state.user.error,
+    error: state.user.error || state.auth.error,
     user: state.user.user,
     token: state.auth.token,
   }),
