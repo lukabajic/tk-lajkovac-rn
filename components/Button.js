@@ -1,6 +1,5 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
 import Colors from "../utils/colors";
 
@@ -27,6 +26,7 @@ const Button = ({ children, style, onPress, disabled, ...props }) => {
   style && buttonStyles.push(style);
 
   disabled && buttonStyles.push(styles.disabled);
+  disabled && textStyles.push(styles.disabledText);
 
   return (
     <TouchableOpacity
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 10,
     overflow: "hidden",
+    borderWidth: 2,
   },
   text: {
     fontSize: 16,
@@ -60,12 +61,11 @@ const styles = StyleSheet.create({
     padding: 24,
     borderRadius: 24,
   },
-  primary: { backgroundColor: Colors.primary },
-  secondary: { backgroundColor: Colors.orange },
+  primary: { backgroundColor: Colors.primary, borderColor: Colors.primary },
+  secondary: { backgroundColor: Colors.orange, borderColor: Colors.orange },
   tertiary: {
     backgroundColor: Colors.white,
     borderColor: Colors.primary,
-    borderWidth: 1,
   },
   primaryText: { color: Colors.white },
   secondaryText: { color: Colors.white },
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.gray,
     borderWidth: 2,
   },
+  disabledText: { color: Colors.gray },
 });
 
 export default Button;
