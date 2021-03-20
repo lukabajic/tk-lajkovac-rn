@@ -19,7 +19,9 @@ const selectQuickTimes = (schedule) => {
 
   courts?.forEach((c) =>
     c.times.forEach((t) => {
-      const hours = 8 || new Date().getHours();
+      if (t.taken) return;
+
+      const hours = new Date().getHours();
       const startHour = Number(t.start.slice(0, 2));
 
       if (hours === startHour) {
