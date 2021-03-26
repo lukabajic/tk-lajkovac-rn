@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, View, ScrollView, StyleSheet } from "react-native";
+import { View } from "react-native";
 import { connect } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 
-import { LargeTitle, Callout } from "../../components/Typography";
 import Button from "../../components/Button";
 import Loader from "../../components/Loader";
 import Alert from "../../components/Alert";
@@ -17,6 +16,7 @@ import {
 } from "../../store/actions";
 import LogoutButton from "../../components/LogoutButton";
 import screenOptions from "../../utils/screenOptions";
+import FormScreen from "../../components/FormScreen";
 
 const Stack = createStackNavigator();
 
@@ -62,66 +62,48 @@ const PleaseVerifyScreen = connect(
     if (loading) return <Loader />;
 
     return (
-      <SafeAreaView style={styles.screen}>
-        <ScrollView bounces={false} contentContainerStyle={styles.form}>
-          <View style={styles.header}>
-            <LargeTitle>Potvrdite email</LargeTitle>
-          </View>
-          {error && <Alert message={error} type="danger" />}
-          <View style={styles.textBox}>
-            <Callout style={styles.text}>
-              Poslali smo email na {user.email}.
-            </Callout>
-            <Callout style={styles.text}>
-              Molim vas potvrdite da je to vaša email adresa klikom na link koji
-              ste dobili.
-            </Callout>
-          </View>
-          <View style={styles.actions}>
-            <Button primary square onPress={() => fetchCurUser(token)}>
-              <Ionicons name="arrow-forward" size={28} color={colors.white} />
-            </Button>
-          </View>
-        </ScrollView>
-        <View style={styles.otherActions}>
-          <Link
-            darkGray
-            style={{ textAlign: "center" }}
-            action={() => {
-              setAlreadyReSent(true);
-              resendEmailVerification(token);
-            }}
-            disabled={alreadyReSent}
-          >
-            Pošaljite opet
-          </Link>
+      <FormScreen
+        title="Potvrdite email"
+        error={error}
+        subtitle={`\n Poslali smo email na ${user.email}. \n Molim vas potvrdite da je to vaša email adresa klikom na link koji ste dobili.`}
+        bottomContent={
+          <BottomContent
+            resendEmailVerification={resendEmailVerification}
+            setAlreadyReSent={setAlreadyReSent}
+            token={token}
+            alreadyReSent={alreadyReSent}
+          />
+        }
+      >
+        <View>
+          <Button primary square onPress={() => fetchCurUser(token)}>
+            <Ionicons name="arrow-forward" size={28} color={colors.white} />
+          </Button>
         </View>
-      </SafeAreaView>
+      </FormScreen>
     );
   }
 );
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    position: "relative",
-  },
-  form: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 10,
-  },
-  header: {
-    marginBottom: 40,
-  },
-  textBox: {
-    marginBottom: 20,
-  },
-  text: {
-    textAlign: "center",
-  },
-  actions: {},
-});
+const BottomContent = ({
+  resendEmailVerification,
+  setAlreadyReSent,
+  token,
+  alreadyReSent,
+}) => (
+  <View>
+    <Link
+      darkGray
+      style={{ textAlign: "center" }}
+      action={() => {
+        setAlreadyReSent(true);
+        resendEmailVerification(token);
+      }}
+      disabled={alreadyReSent}
+    >
+      Pošaljite opet
+    </Link>
+  </View>
+);
 
 export default PleaseVerifyStack;

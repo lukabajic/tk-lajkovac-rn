@@ -1,26 +1,19 @@
 import React, { useState, useEffect } from "react";
-import {
-  SafeAreaView,
-  View,
-  KeyboardAvoidingView,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
+import { View } from "react-native";
 import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { LargeTitle } from "../../components/Typography";
 import Button from "../../components/Button";
 import Loader from "../../components/Loader";
 import { validate } from "../../utils/validate";
 import FormFields from "../../components/FormFields";
-import Alert from "../../components/Alert";
 import { userDataForm } from "../../utils/forms";
 import colors from "../../utils/colors";
 import { updateData, userClearError } from "../../store/actions";
 import LogoutButton from "../../components/LogoutButton";
 import screenOptions from "../../utils/screenOptions";
+import FormScreen from "../../components/FormScreen";
 
 const Stack = createStackNavigator();
 
@@ -108,59 +101,23 @@ const NoInfoScreen = connect(
   if (loading) return <Loader />;
 
   return (
-    <SafeAreaView style={styles.screen}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : null}
-        keyboardVerticalOffset={40}
-        style={styles.wrapper}
-      >
-        <ScrollView bounces={false} contentContainerStyle={styles.form}>
-          <View style={styles.header}>
-            <LargeTitle>Vaše informacije</LargeTitle>
-          </View>
-          {error && <Alert message={error} type="danger" />}
-          <FormFields
-            form={form}
-            onBlur={onBlurHandler}
-            onChange={onChangeHandler}
-            style={styles.inputs}
+    <FormScreen title="Vaše informacije" error={error}>
+      <FormFields
+        form={form}
+        onBlur={onBlurHandler}
+        onChange={onChangeHandler}
+      />
+      <View style={styles.actions}>
+        <Button primary square onPress={onSubmit} disabled={!isFormValid()}>
+          <Ionicons
+            name="arrow-forward"
+            size={28}
+            color={isFormValid() ? colors.white : colors.gray}
           />
-          <View style={styles.actions}>
-            <Button primary square onPress={onSubmit} disabled={!isFormValid()}>
-              <Ionicons
-                name="arrow-forward"
-                size={28}
-                color={isFormValid() ? colors.white : colors.gray}
-              />
-            </Button>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        </Button>
+      </View>
+    </FormScreen>
   );
-});
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    position: "relative",
-  },
-  wrapper: {
-    flexGrow: 1,
-  },
-  form: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 10,
-  },
-  header: {
-    marginBottom: 40,
-  },
-  inputs: {
-    marginBottom: 20,
-  },
-  actions: {},
 });
 
 export default NoInfoStack;
