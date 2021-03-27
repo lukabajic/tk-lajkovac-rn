@@ -161,3 +161,24 @@ export const userPhoneForm = (user) => ({
     },
   },
 });
+
+export const userEmailForm = (user) => ({
+  anyTouched: false,
+  values: {
+    email: user?.email || "",
+  },
+  fields: {
+    email: {
+      type: "emailAddress",
+      label: "Email",
+      placeholder: "primer@gmail.com",
+      keyboardType: "email-address",
+      autoFocus: true,
+      meta: {
+        valid: false,
+        touched: false,
+        error: null,
+      },
+    },
+  },
+});
