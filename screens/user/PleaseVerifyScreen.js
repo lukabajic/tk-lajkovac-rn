@@ -6,7 +6,6 @@ import { Ionicons } from "@expo/vector-icons";
 
 import Button from "../../components/Button";
 import Loader from "../../components/Loader";
-import Alert from "../../components/Alert";
 import Link from "../../components/Link";
 import colors from "../../utils/colors";
 import {
