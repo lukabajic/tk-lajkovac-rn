@@ -5,23 +5,18 @@ import {
   View,
   TouchableOpacity,
   Pressable,
-  Text,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 
-import {
-  TitleTwo,
-  Headline,
-  Subheadline,
-  Footnote,
-} from "../components/Typography";
+import { TitleTwo, Headline, Subheadline } from "../components/Typography";
 import Colors from "../utils/colors";
 import { formatTime } from "../utils/format";
 import { getBackendDate } from "../utils/getDate";
 import Button from "../components/Button";
+import Alert from "../components/Alert";
 import Info from "../components/Info";
 import getDate from "../utils/getDate";
 import { scheduleTime } from "../store/actions";
@@ -117,9 +112,10 @@ const ScheduleCourt = ({
   );
 };
 
-const AlreadyBooked = ({ day, court, time, scheduleTime, token }) => (
+const AlreadyBooked = ({ day, court, time, scheduleTime, token, error }) => (
   <View style={styles.alreadyBooked}>
     <View style={styles.alreadyBookedContent}>
+      <Alert message={error} type="danger" />
       <TitleTwo style={{ marginBottom: 32, marginTop: 16 }}>
         Već imate zakazan termin za ovaj dan.
       </TitleTwo>
@@ -158,16 +154,31 @@ const AlreadyBooked = ({ day, court, time, scheduleTime, token }) => (
   </View>
 );
 
-@connect((state) => ({ user: state.user.user, token: state.auth.token }), {
-  scheduleTime,
-})
+@connect(
+  (state) => ({
+    user: state.user.user,
+    token: state.auth.token,
+    error: state.schedule.error,
+  }),
+  {
+    scheduleTime,
+  }
+)
 class ScheduleBody extends Component {
   state = {
     isSliding: false,
   };
 
   render() {
-    const { schedule, navigation, day, user, scheduleTime, token } = this.props;
+    const {
+      schedule,
+      navigation,
+      day,
+      user,
+      scheduleTime,
+      token,
+      error,
+    } = this.props;
     const { isSliding } = this.state;
     const windowWidth = Dimensions.get("window").width;
 
@@ -183,6 +194,7 @@ class ScheduleBody extends Component {
           court={hasBooking.court}
           scheduleTime={scheduleTime}
           token={token}
+          error={error}
         />
       );
 
