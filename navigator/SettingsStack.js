@@ -1,27 +1,28 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { View, Text } from "react-native";
 
 import screenOptions from "../utils/screenOptions";
 import MenuButton from "../components/MenuButton";
+import UserAllSettings from "../screens/user/UserAllSettings";
+import ChangeName from "../screens/user/ChangeName";
 
 const Stack = createStackNavigator();
 
 const SettingsStack = () => {
   return (
-    <Stack.Navigator
-      screenOptions={({ navigation }) => ({
-        ...screenOptions,
-        headerLeft: () => <MenuButton navigation={navigation} />,
-      })}
-    >
+    <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
-        name="Settings"
-        component={() => (
-          <View>
-            <Text>Settings</Text>
-          </View>
-        )}
+        name="UserAllSettings"
+        component={UserAllSettings}
+        options={({ navigation }) => ({
+          title: false,
+          headerLeft: () => <MenuButton navigation={navigation} />,
+        })}
+      />
+      <Stack.Screen
+        name="ChangeName"
+        component={ChangeName}
+        options={{ title: false }}
       />
     </Stack.Navigator>
   );
