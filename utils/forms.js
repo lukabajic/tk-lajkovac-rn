@@ -76,11 +76,11 @@ export const signUpForm = {
   },
 };
 
-export const userDataForm = (user) => ({
+export const userDataForm = {
   anyTouched: false,
   values: {
-    displayName: user?.displayName || "",
-    phone: user?.phone || "",
+    displayName: "",
+    phone: "",
   },
   fields: {
     displayName: {
@@ -107,4 +107,4 @@ export const userDataForm = (user) => ({
       },
     },
   },
-});
+};

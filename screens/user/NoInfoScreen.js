@@ -6,7 +6,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import Button from "../../components/Button";
 import Loader from "../../components/Loader";
-import { validate } from "../../utils/validate";
 import FormFields from "../../components/FormFields";
 import { userDataForm } from "../../utils/forms";
 import colors from "../../utils/colors";
@@ -42,8 +41,8 @@ const NoInfoScreen = connect(
     token: state.auth.token,
   }),
   { updateData, userClearError }
-)(({ error, loading, user, updateData, token, userClearError }) => {
-  const [form, setForm] = useState(userDataForm(user));
+)(({ error, loading, updateData, token, userClearError }) => {
+  const [form, setForm] = useState(userDataForm);
 
   useEffect(() => () => userClearError(), []);
 
@@ -55,7 +54,7 @@ const NoInfoScreen = connect(
 
     updateData(token, "SET_INITIAL_DATA", { displayName, phone });
 
-    setForm(userDataForm(user));
+    setForm(userDataForm);
   };
 
   if (loading) return <Loader />;
