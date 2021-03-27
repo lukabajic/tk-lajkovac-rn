@@ -182,3 +182,47 @@ export const userEmailForm = (user) => ({
     },
   },
 });
+
+export const userPasswordForm = {
+  anyTouched: false,
+  values: {
+    oldPassword: "",
+    password: "",
+    confPassword: "",
+  },
+  fields: {
+    oldPassword: {
+      type: "password",
+      label: "Ponovite lozinku",
+      placeholder: "********",
+      autoFocus: false,
+      meta: {
+        valid: false,
+        touched: false,
+        error: null,
+      },
+    },
+    password: {
+      type: "newPassword",
+      label: "Lozinka",
+      placeholder: "********",
+      autoFocus: false,
+      meta: {
+        valid: false,
+        touched: false,
+        error: null,
+      },
+    },
+    confPassword: {
+      type: "password",
+      label: "Ponovite lozinku",
+      placeholder: "********",
+      autoFocus: false,
+      meta: {
+        valid: false,
+        touched: false,
+        error: null,
+      },
+    },
+  },
+};

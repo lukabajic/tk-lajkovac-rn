@@ -11,7 +11,7 @@ export const validate = (field, value, form = {}) => {
         valid = false;
       }
       return { error, valid };
-    case "password":
+    case "password" || "oldPassword":
       if (!value) {
         error = "Obavezno polje";
         valid = false;
@@ -25,7 +25,7 @@ export const validate = (field, value, form = {}) => {
         error = "Obavezno polje";
         valid = false;
       } else if (value !== form?.values.password) {
-        error = "Sifra bi trebalo da se poklapaju.";
+        error = "Sifre bi trebalo da se poklapaju.";
         valid = false;
       }
       return { error, valid };
