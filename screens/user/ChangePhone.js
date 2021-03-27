@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
+import { View } from "react-native";
 
 import FormScreen from "../../components/FormScreen";
 import FormFields from "../../components/FormFields";
 import Loader from "../../components/Loader";
 import { updateData } from "../../store/actions";
 import { userPhoneForm } from "../../utils/forms";
+import Button from "../../components/Button";
+import colors from "../../utils/colors";
 
 const ChangeScreen = ({ user, error, updateData, loading, token }) => {
   const [form, setForm] = useState(userPhoneForm(user));

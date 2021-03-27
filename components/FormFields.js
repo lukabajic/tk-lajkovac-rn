@@ -60,7 +60,7 @@ const FormFields = ({ form, setForm, style = {}, prefill }) => {
           autoFocus={form.fields[field].autoFocus}
           keyboardType={form.fields[field].keyboardType || "default"}
           spacing={Object.keys(form.fields).length > index}
-          prefill={prefill.includes(field)}
+          prefill={prefill?.includes(field)}
         />
       ))}
     </View>

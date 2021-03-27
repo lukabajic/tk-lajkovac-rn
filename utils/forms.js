@@ -120,7 +120,7 @@ export const userNameForm = (user) => ({
       type: "name",
       label: "Ime",
       placeholder: "Novak",
-      autoFocus: true,
+      autoFocus: false,
       meta: {
         valid: false,
         touched: false,
@@ -131,7 +131,7 @@ export const userNameForm = (user) => ({
       type: "name",
       label: "Prezime",
       placeholder: "Đoković",
-      autoFocus: true,
+      autoFocus: false,
       meta: {
         valid: false,
         touched: false,
@@ -173,7 +173,7 @@ export const userEmailForm = (user) => ({
       label: "Email",
       placeholder: "primer@gmail.com",
       keyboardType: "email-address",
-      autoFocus: true,
+      autoFocus: false,
       meta: {
         valid: false,
         touched: false,
