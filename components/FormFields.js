@@ -4,7 +4,7 @@ import { View, StyleSheet } from "react-native";
 import Field from "./Field";
 import { validate } from "../utils/validate";
 
-const FormFields = ({ form, setForm, style = {} }) => {
+const FormFields = ({ form, setForm, style = {}, prefill }) => {
   const onChangeHandler = (field, value) => {
     setForm({
       ...form,
@@ -60,6 +60,7 @@ const FormFields = ({ form, setForm, style = {} }) => {
           autoFocus={form.fields[field].autoFocus}
           keyboardType={form.fields[field].keyboardType || "default"}
           spacing={Object.keys(form.fields).length > index}
+          prefill={prefill.includes(label)}
         />
       ))}
     </View>

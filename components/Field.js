@@ -16,17 +16,17 @@ const Input = ({
   spacing,
   keyboardType = "default",
   style = {},
-  filled,
+  prefill,
 }) => {
   const [focused, setFocused] = useState(false);
   // const [displayPassword, setDisplayPassowrd] = useState(false);
 
   useEffect(() => {
-    if (filled) {
+    if (prefill) {
       handleFocus();
       handleBlur();
     }
-  }, [filled]);
+  }, [prefill]);
 
   const placeholderAnimate = useInitialValue(1);
   const placeholderLeftPos = useInitialValue(0);
