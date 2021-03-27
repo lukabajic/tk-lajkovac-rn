@@ -11,16 +11,24 @@ import { updateData } from "../../store/actions";
 import { userNameForm } from "../../utils/forms";
 import colors from "../../utils/colors";
 
-const ChangeScreen = ({ user, error, updateData, loading, token }) => {
+const ChangeScreen = ({
+  user,
+  error,
+  updateData,
+  loading,
+  token,
+  navigation,
+}) => {
   const [form, setForm] = useState(userNameForm(user));
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const { firstName, lastName } = form.values;
     const displayName = `${firstName} ${lastName}`;
 
-    updateData(token, "UPDATE_NAME", { displayName });
+    await updateData(token, "UPDATE_NAME", { displayName });
 
     setForm(userNameForm(user));
+    navigation.goBack();
   };
 
   const isFormValid = () =>

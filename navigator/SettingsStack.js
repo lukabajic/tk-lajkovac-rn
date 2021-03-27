@@ -5,6 +5,9 @@ import screenOptions from "../utils/screenOptions";
 import MenuButton from "../components/MenuButton";
 import UserAllSettings from "../screens/user/UserAllSettings";
 import ChangeName from "../screens/user/ChangeName";
+import ChangePassword from "../screens/user/ChangePassword";
+import ChangePhone from "../screens/user/ChangePhone";
+import EmailChange from "../screens/user/EmailChange";
 
 const Stack = createStackNavigator();
 
@@ -22,6 +25,21 @@ const SettingsStack = () => {
       <Stack.Screen
         name="ChangeName"
         component={ChangeName}
+        options={{ title: false }}
+      />
+      <Stack.Screen
+        name="ChangePassword"
+        component={ChangePassword}
+        options={{ title: false }}
+      />
+      <Stack.Screen
+        name="ChangePhone"
+        component={ChangePhone}
+        options={{ title: false }}
+      />
+      <Stack.Screen
+        name="EmailChange"
+        component={EmailChange}
         options={{ title: false }}
       />
     </Stack.Navigator>

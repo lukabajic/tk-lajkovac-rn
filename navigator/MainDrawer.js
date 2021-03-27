@@ -34,7 +34,7 @@ const BottomItems = connect(null, { logout })(({ logout, navigation }) => (
       style={[styles.bottomItem, styles.bottomItemNotLast]}
       onPress={() => navigation.navigate("SettingsStack")}
     >
-      <Ionicons name="ios-cog-outline" size={28} color={Colors.darkGray} />
+      <Ionicons name="ios-person-outline" size={28} color={Colors.darkGray} />
     </TouchableOpacity>
     <TouchableOpacity
       style={[styles.bottomItem, styles.bottomItemNotLast]}

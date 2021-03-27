@@ -11,15 +11,23 @@ import { userEmailForm } from "../../utils/forms";
 import Button from "../../components/Button";
 import colors from "../../utils/colors";
 
-const ChangeNameScreen = ({ user, error, updateData, loading, token }) => {
+const ChangeNameScreen = ({
+  user,
+  error,
+  updateData,
+  loading,
+  token,
+  navigation,
+}) => {
   const [form, setForm] = useState(userEmailForm(user));
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const { email } = form.values;
 
     updateData(token, "UPDATE_EMAIL", { email });
 
     setForm(userEmailForm(user));
+    navigation.goBack();
   };
 
   const isFormValid = () => form.fields.email.meta.valid;
@@ -27,7 +35,7 @@ const ChangeNameScreen = ({ user, error, updateData, loading, token }) => {
   if (loading) return <Loader />;
 
   return (
-    <FormScreen title="Promenite ime" error={error}>
+    <FormScreen title="Promenite email" error={error}>
       <FormFields form={form} setForm={setForm} prefill={["email"]} />
       <View>
         <Button primary square onPress={onSubmit} disabled={!isFormValid()}>

@@ -36,15 +36,15 @@ const UserAllSettings = ({ user, navigation }) => {
       ],
     },
     {
-      to: "PhoneEdit",
+      to: "ChangePhone",
       data: [{ label: "Broj telefona", value: phone }],
     },
     {
-      to: "EmailEdit",
+      to: "EmailChange",
       data: [{ label: "Email", value: email }],
     },
     {
-      to: "PasswordEdit",
+      to: "ChangePassword",
       data: [{ label: "Šifra", value: "********" }],
     },
   ];

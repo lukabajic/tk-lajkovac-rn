@@ -11,15 +11,22 @@ import { userPasswordForm } from "../../utils/forms";
 import Button from "../../components/Button";
 import colors from "../../utils/colors";
 
-const ChangeNameScreen = ({ user, error, updateData, loading, token }) => {
+const ChangeNameScreen = ({
+  error,
+  updateData,
+  loading,
+  token,
+  navigation,
+}) => {
   const [form, setForm] = useState(userPasswordForm);
 
-  const onSubmit = () => {
-    const { email } = form.values;
+  const onSubmit = async () => {
+    const { password, oldPassword } = form.values;
 
-    updateData(token, "UPDATE_PASSWORD", { oldPassword, password });
+    await updateData(token, "UPDATE_PASSWORD", { oldPassword, password });
 
     setForm(userPasswordForm);
+    navigation.goBack();
   };
 
   const isFormValid = () =>
@@ -30,7 +37,7 @@ const ChangeNameScreen = ({ user, error, updateData, loading, token }) => {
   if (loading) return <Loader />;
 
   return (
-    <FormScreen title="Promenite ime" error={error}>
+    <FormScreen title="Promenite šifru" error={error}>
       <FormFields form={form} setForm={setForm} prefill={["email"]} />
       <View>
         <Button primary square onPress={onSubmit} disabled={!isFormValid()}>

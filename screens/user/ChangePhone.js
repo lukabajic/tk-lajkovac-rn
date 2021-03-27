@@ -11,15 +11,23 @@ import { userPhoneForm } from "../../utils/forms";
 import Button from "../../components/Button";
 import colors from "../../utils/colors";
 
-const ChangeScreen = ({ user, error, updateData, loading, token }) => {
+const ChangeScreen = ({
+  user,
+  error,
+  updateData,
+  loading,
+  token,
+  navigation,
+}) => {
   const [form, setForm] = useState(userPhoneForm(user));
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const { phone } = form.values;
 
-    updateData(token, "UPDATE_PHONE", { phone });
+    await updateData(token, "UPDATE_PHONE", { phone });
 
     setForm(userPhoneForm(user));
+    navigation.goBack();
   };
 
   const isFormValid = () => form.fields.phone.meta.valid;
@@ -27,7 +35,7 @@ const ChangeScreen = ({ user, error, updateData, loading, token }) => {
   if (loading) return <Loader />;
 
   return (
-    <FormScreen title="Promenite ime" error={error}>
+    <FormScreen title="Promenite broj telefona" error={error}>
       <FormFields form={form} setForm={setForm} prefill={["phone"]} />
       <View>
         <Button primary square onPress={onSubmit} disabled={!isFormValid()}>
