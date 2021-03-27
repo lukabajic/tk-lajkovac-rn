@@ -108,3 +108,35 @@ export const userDataForm = {
     },
   },
 };
+
+export const userNameForm = (user) => ({
+  anyTouched: false,
+  values: {
+    firstName: user?.data.displayName.split(" ")[0] || "",
+    lastName: user?.data.displayName.split(" ")[1] || "",
+  },
+  fields: {
+    firstName: {
+      type: "name",
+      label: "Ime",
+      placeholder: "Novak",
+      autoFocus: true,
+      meta: {
+        valid: false,
+        touched: false,
+        error: null,
+      },
+    },
+    lastName: {
+      type: "name",
+      label: "Prezime",
+      placeholder: "Đoković",
+      autoFocus: true,
+      meta: {
+        valid: false,
+        touched: false,
+        error: null,
+      },
+    },
+  },
+});
