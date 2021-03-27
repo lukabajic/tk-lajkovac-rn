@@ -22,8 +22,10 @@ const Input = ({
   // const [displayPassword, setDisplayPassowrd] = useState(false);
 
   useEffect(() => {
-    handleFocus();
-    handleBlur();
+    if (filled) {
+      handleFocus();
+      handleBlur();
+    }
   }, [filled]);
 
   const placeholderAnimate = useInitialValue(1);
