@@ -18,6 +18,7 @@ import Alert from "../../components/Alert";
 import colors from "../../utils/colors";
 import { resetPassword, userClearError, auth } from "../../store/actions";
 import Info from "../../components/Info";
+import FormScreen from "../../components/FormScreen";
 
 const INITIAL_FORM = {
   anyTouched: false,
@@ -78,46 +79,6 @@ const ResetPassword = ({
     }
   }, [email]);
 
-  const onChangeHandler = (field, value) => {
-    setForm({
-      ...form,
-      values: {
-        ...form.values,
-        [field]: value,
-      },
-      fields: {
-        ...form.fields,
-        [field]: {
-          ...form.fields[field],
-          meta: {
-            ...form.fields[field].meta,
-            valid: validate(field, value, form).valid,
-            error: validate(field, value, form).error,
-          },
-        },
-      },
-    });
-  };
-
-  const onBlurHandler = (field, value) => {
-    setForm({
-      ...form,
-      anyTouched: true,
-      fields: {
-        ...form.fields,
-        [field]: {
-          ...form.fields[field],
-          meta: {
-            ...form.fields[field].meta,
-            touched: true,
-            valid: validate(field, value, form).valid,
-            error: validate(field, value, form).error,
-          },
-        },
-      },
-    });
-  };
-
   const isFormValid = () =>
     !email ? form?.fields.email?.meta.valid : form?.fields.password?.meta.valid;
 
@@ -142,87 +103,35 @@ const ResetPassword = ({
   if (loading) return <Loader />;
 
   return (
-    <SafeAreaView style={styles.screen}>
-      <KeyboardAvoidingView
-        // android add
-        behavior={Platform.OS === "ios" ? "padding" : null}
-        keyboardVerticalOffset={40}
-        style={styles.wrapper}
-      >
-        <ScrollView bounces={false} contentContainerStyle={styles.form}>
-          <View style={styles.header}>
-            <LargeTitle style={{ marginBottom: 10, textAlign: "center" }}>
-              {!email ? "Pošaljite novu lozinku na svoj email" : "Ulogujte se"}
-            </LargeTitle>
-            {!!email && (
-              <Callout style={{ textAlign: "center" }}>
-                Poslali smo novu šifru na vašu email adresu.
-              </Callout>
-            )}
-          </View>
-          {error && <Alert message={error} type="danger" />}
-          {!!email && (
-            <Info
-              label="Email"
-              value={email}
-              style={{ marginBottom: 16, width: "100%", maxWidth: 320 }}
-            />
-          )}
-          <FormFields
-            form={form}
-            onBlur={onBlurHandler}
-            onChange={onChangeHandler}
-            style={styles.inputs}
+    <FormScreen
+      title={!email ? "Pošaljite novu lozinku na svoj email" : "Ulogujte se"}
+      subtitle={email && "Poslali smo novu šifru na vašu email adresu."}
+    >
+      {email && (
+        <Info
+          label="Email"
+          value={email}
+          style={{ marginBottom: 16, width: "100%", maxWidth: 320 }}
+        />
+      )}
+      <FormFields form={form} setForm={setForm} />
+      <View>
+        <Button
+          primary
+          square
+          onPress={!email ? onResetPassword : login}
+          disabled={!isFormValid()}
+        >
+          <Ionicons
+            name="arrow-forward"
+            size={28}
+            color={isFormValid() ? colors.white : colors.gray}
           />
-          <View style={styles.actions}>
-            <Button
-              primary
-              square
-              onPress={!email ? onResetPassword : login}
-              disabled={!isFormValid()}
-            >
-              <Ionicons
-                name="arrow-forward"
-                size={28}
-                color={isFormValid() ? colors.white : colors.gray}
-              />
-            </Button>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        </Button>
+      </View>
+    </FormScreen>
   );
 };
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    position: "relative",
-  },
-  wrapper: {
-    flexGrow: 1,
-  },
-  form: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 10,
-  },
-  header: {
-    alignItems: "center",
-    marginBottom: 40,
-  },
-  inputs: {
-    marginBottom: 20,
-  },
-  logout: {
-    position: "absolute",
-    top: 16,
-    right: 16,
-    overflow: "visible",
-  },
-  actions: {},
-});
 
 export default connect(
   (state) => ({

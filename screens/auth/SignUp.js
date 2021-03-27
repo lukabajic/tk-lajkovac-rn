@@ -8,7 +8,6 @@ import Button from "../../components/Button";
 import Link from "../../components/Link";
 import colors from "../../utils/colors";
 import { auth, authClearError, authFail } from "../../store/actions";
-import { validate } from "../../utils/validate";
 import { signUpForm } from "../../utils/forms";
 import Loader from "../../components/Loader";
 import FormScreen from "../../components/FormScreen";
@@ -22,52 +21,11 @@ const SignUp = ({
   navigation,
 }) => {
   const [form, setForm] = useState(signUpForm);
-  console.log(error);
 
   useEffect(() => {
     authFail(null);
     return () => authClearError();
   }, []);
-
-  const onChangeHandler = (field, value) => {
-    setForm({
-      ...form,
-      values: {
-        ...form.values,
-        [field]: value,
-      },
-      fields: {
-        ...form.fields,
-        [field]: {
-          ...form.fields[field],
-          meta: {
-            ...form.fields[field].meta,
-            valid: validate(field, value, form).valid,
-            error: validate(field, value, form).error,
-          },
-        },
-      },
-    });
-  };
-
-  const onBlurHandler = (field, value) => {
-    setForm({
-      ...form,
-      anyTouched: true,
-      fields: {
-        ...form.fields,
-        [field]: {
-          ...form.fields[field],
-          meta: {
-            ...form.fields[field].meta,
-            touched: true,
-            valid: validate(field, value, form).valid,
-            error: validate(field, value, form).error,
-          },
-        },
-      },
-    });
-  };
 
   const isFormValid = () =>
     form.fields.email.meta.valid &&
@@ -90,12 +48,8 @@ const SignUp = ({
       error={error}
       bottomContent={<BottomContent navigation={navigation} />}
     >
-      <FormFields
-        form={form}
-        onBlur={onBlurHandler}
-        onChange={onChangeHandler}
-      />
-      <View style={styles.actions}>
+      <FormFields form={form} setForm={setForm} />
+      <View>
         <Button primary square onPress={onSubmit} disabled={!isFormValid()}>
           <Ionicons
             name="arrow-forward"

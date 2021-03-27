@@ -8,7 +8,6 @@ import Button from "../../components/Button";
 import Link from "../../components/Link";
 import { auth, authClearError, authFail } from "../../store/actions";
 import colors from "../../utils/colors";
-import { validate } from "../../utils/validate";
 import { signInForm } from "../../utils/forms";
 import Loader from "../../components/Loader";
 import FormScreen from "../../components/FormScreen";
@@ -27,46 +26,6 @@ const SignIn = ({
     authFail(null);
     return () => authClearError();
   }, []);
-
-  const onChangeHandler = (field, value) => {
-    setForm({
-      ...form,
-      values: {
-        ...form.values,
-        [field]: value,
-      },
-      fields: {
-        ...form.fields,
-        [field]: {
-          ...form.fields[field],
-          meta: {
-            ...form.fields[field].meta,
-            valid: validate(field, value).valid,
-            error: validate(field, value).error,
-          },
-        },
-      },
-    });
-  };
-
-  const onBlurHandler = (field, value) => {
-    setForm({
-      ...form,
-      anyTouched: true,
-      fields: {
-        ...form.fields,
-        [field]: {
-          ...form.fields[field],
-          meta: {
-            ...form.fields[field].meta,
-            touched: true,
-            valid: validate(field, value).valid,
-            error: validate(field, value).error,
-          },
-        },
-      },
-    });
-  };
 
   const isFormValid = () =>
     form.fields.email.meta.valid && form.fields.password.meta.valid;
@@ -87,11 +46,7 @@ const SignIn = ({
       error={error}
       bottomContent={<BottomContent navigation={navigation} />}
     >
-      <FormFields
-        form={form}
-        onBlur={onBlurHandler}
-        onChange={onChangeHandler}
-      />
+      <FormFields form={form} setForm={setForm} />
       <View>
         <Button primary square onPress={onSubmit} disabled={!isFormValid()}>
           <Ionicons

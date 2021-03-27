@@ -47,46 +47,6 @@ const NoInfoScreen = connect(
 
   useEffect(() => () => userClearError(), []);
 
-  const onChangeHandler = (field, value) => {
-    setForm({
-      ...form,
-      values: {
-        ...form.values,
-        [field]: value,
-      },
-      fields: {
-        ...form.fields,
-        [field]: {
-          ...form.fields[field],
-          meta: {
-            ...form.fields[field].meta,
-            valid: validate(field, value, form).valid,
-            error: validate(field, value, form).error,
-          },
-        },
-      },
-    });
-  };
-
-  const onBlurHandler = (field, value) => {
-    setForm({
-      ...form,
-      anyTouched: true,
-      fields: {
-        ...form.fields,
-        [field]: {
-          ...form.fields[field],
-          meta: {
-            ...form.fields[field].meta,
-            touched: true,
-            valid: validate(field, value, form).valid,
-            error: validate(field, value, form).error,
-          },
-        },
-      },
-    });
-  };
-
   const isFormValid = () =>
     form.fields.displayName.meta.valid && form.fields.phone.meta.valid;
 
@@ -102,11 +62,7 @@ const NoInfoScreen = connect(
 
   return (
     <FormScreen title="Vaše informacije" error={error}>
-      <FormFields
-        form={form}
-        onBlur={onBlurHandler}
-        onChange={onChangeHandler}
-      />
+      <FormFields form={form} setForm={setForm} />
       <View style={styles.actions}>
         <Button primary square onPress={onSubmit} disabled={!isFormValid()}>
           <Ionicons
