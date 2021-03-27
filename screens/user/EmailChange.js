@@ -19,7 +19,7 @@ const ChangeNameScreen = ({ user, error, updateData, loading, token }) => {
     setForm(userEmailForm(user));
   };
 
-  const isFormValid = () => form.fields.phone.meta.valid;
+  const isFormValid = () => form.fields.email.meta.valid;
 
   if (loading) return <Loader />;
 

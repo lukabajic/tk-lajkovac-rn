@@ -8,7 +8,7 @@ import Loader from "../../components/Loader";
 import { updateData } from "../../store/actions";
 import { userPhoneForm } from "../../utils/forms";
 
-const ChangeNameScreen = ({ user, error, updateData, loading, token }) => {
+const ChangeScreen = ({ user, error, updateData, loading, token }) => {
   const [form, setForm] = useState(userPhoneForm(user));
 
   const onSubmit = () => {
@@ -47,4 +47,4 @@ export default connect(
     token: state.auth.token,
   }),
   { updateData }
-)(ChangeNameScreen);
+)(ChangeScreen);
