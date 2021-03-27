@@ -140,3 +140,24 @@ export const userNameForm = (user) => ({
     },
   },
 });
+
+export const userPhoneForm = (user) => ({
+  anyTouched: false,
+  values: {
+    phone: user?.data.phone || "",
+  },
+  fields: {
+    phone: {
+      type: "telephoneNumber",
+      label: "Broj telefona",
+      placeholder: "063 982 0611",
+      keyboardType: "numeric",
+      autoFocus: false,
+      meta: {
+        valid: false,
+        touched: false,
+        error: null,
+      },
+    },
+  },
+});
