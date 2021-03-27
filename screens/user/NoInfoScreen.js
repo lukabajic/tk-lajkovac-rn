@@ -37,7 +37,6 @@ const NoInfoScreen = connect(
   (state) => ({
     loading: state.user.loading,
     error: state.user.error,
-    user: state.user.user,
     token: state.auth.token,
   }),
   { updateData, userClearError }
