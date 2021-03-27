@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  SafeAreaView,
-  View,
-  KeyboardAvoidingView,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
+import { View } from "react-native";
 import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 
-import { LargeTitle, Callout } from "../../components/Typography";
 import Button from "../../components/Button";
 import Loader from "../../components/Loader";
-import { validate } from "../../utils/validate";
 import FormFields from "../../components/FormFields";
-import Alert from "../../components/Alert";
 import colors from "../../utils/colors";
 import { resetPassword, userClearError, auth } from "../../store/actions";
 import Info from "../../components/Info";
@@ -106,6 +97,7 @@ const ResetPassword = ({
     <FormScreen
       title={!email ? "Pošaljite novu lozinku na svoj email" : "Ulogujte se"}
       subtitle={email && "Poslali smo novu šifru na vašu email adresu."}
+      error={error}
     >
       {email && (
         <Info
