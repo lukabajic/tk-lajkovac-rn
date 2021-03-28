@@ -139,3 +139,5 @@ export const resetPassword = (email) => async (dispatch) => {
     dispatch(userFail(err.message || err));
   }
 };
+
+export const updateUser = (user) => ({ type: actionTypes.UPDATE_USER, user });

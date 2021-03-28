@@ -1,12 +1,19 @@
 import React, { useEffect } from "react";
 import { SafeAreaView, StyleSheet, View, ScrollView } from "react-native";
 import { connect } from "react-redux";
+import OpenSocket from "socket.io-client";
 
 import { LargeTitle, TitleTwo, Subheadline } from "../../components/Typography";
 import Colors from "../../utils/colors";
 import Button from "../../components/Button";
 import { ScheduleTime } from "../../components/ScheduleBody";
-import { fetchSchedule } from "../../store/actions";
+import {
+  fetchSchedule,
+  deleteDay,
+  createDay,
+  updateDay,
+  updateUser,
+} from "../../store/actions";
 import Loader from "../../components/Loader";
 import { getBackendDate } from "../../utils/getDate";
 
@@ -58,9 +65,7 @@ const QuickSchedule = connect(
     schedule: state.schedule.schedule,
     loading: state.schedule.loading,
   }),
-  {
-    fetchSchedule,
-  }
+  { fetchSchedule }
 )(({ schedule, token, fetchSchedule, loading, navigation }) => {
   useEffect(() => {
     if (!schedule) fetchSchedule(token);
@@ -92,7 +97,40 @@ const QuickSchedule = connect(
   );
 });
 
-const Index = ({ navigation }) => {
+const Index = ({
+  navigation,
+  token,
+  createDay,
+  deleteDay,
+  updateDay,
+  updateUser,
+}) => {
+  useEffect(() => {
+    if (token) {
+      console.log(token);
+      const socket = OpenSocket("http://localhost:8000");
+      socket.on("schedule", (data) => {
+        switch (data.action) {
+          case "create":
+            createDay(data.scheduleDay);
+            break;
+
+          case "delete":
+            deleteDay(data.date);
+            break;
+
+          case "edit":
+            updateUser(data.user);
+            updateDay(data.scheduleDay);
+            break;
+
+          default:
+            break;
+        }
+      });
+    }
+  }, [token]);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.wrapper}>
@@ -170,4 +208,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+export default connect((state) => ({ token: state.auth.token }), {
+  createDay,
+  deleteDay,
+  updateDay,
+  updateUser,
+})(Index);

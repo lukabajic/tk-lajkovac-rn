@@ -45,6 +45,18 @@ const reducer = (state = initialState, action) => {
         ...state,
         error: null,
       };
+    case actionTypes.UPDATE_USER:
+      if (!state.users) return state;
+
+      const newUsers = [...state.users];
+      const index = newUsers.findIndex((u) => u.userId === action.user.userId);
+
+      newUsers[index] = action.user;
+
+      return {
+        ...state,
+        users: newUsers,
+      };
     default:
       return state;
   }

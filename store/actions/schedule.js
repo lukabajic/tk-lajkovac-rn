@@ -83,3 +83,18 @@ export const scheduleTime = (token, court, time, day, action = "") => async (
     dispatch(scheduleFail(err.message || err));
   }
 };
+
+export const createDay = (scheduleDay) => ({
+  type: actionTypes.CREATE_DAY,
+  scheduleDay,
+});
+
+export const updateDay = (scheduleDay) => ({
+  type: actionTypes.UPDATE_DAY,
+  scheduleDay,
+});
+
+export const deleteDay = (date) => ({
+  type: actionTypes.DELETE_DAY,
+  date,
+});

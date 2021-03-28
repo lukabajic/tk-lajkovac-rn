@@ -11,6 +11,13 @@ export {
   fetchCurUser,
   resendEmailVerification,
   resetPassword,
+  updateUser,
   fetchAllUsers,
 } from "./user";
-export { fetchSchedule, scheduleTime } from "./schedule";
+export {
+  fetchSchedule,
+  scheduleTime,
+  createDay,
+  deleteDay,
+  updateDay,
+} from "./schedule";
