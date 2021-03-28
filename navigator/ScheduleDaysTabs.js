@@ -31,7 +31,7 @@ const NotPossibleStack = () => (
   </Stack.Navigator>
 );
 
-const NotPossible = ({ navigation }) => {
+const NotPossible = () => {
   const oClock = new Date().getHours();
 
   return (
@@ -77,7 +77,8 @@ const styles = StyleSheet.create({
 
 const ScheduleDayBottom = connect((state) => ({
   schedule: state.schedule.schedule,
-}))(({ schedule }) => {
+  user: state.user.user,
+}))(({ schedule, user }) => {
   const yesterdayDate = getBackendDate(-1);
   const hasYesterday = Boolean(schedule?.find((d) => d.date === yesterdayDate));
 
@@ -118,6 +119,22 @@ const ScheduleDayBottom = connect((state) => ({
           ),
         }}
       />
+      {user.isAdmin && (
+        <Tab.Screen
+          name="Prekosutra"
+          component={ScheduleStack}
+          initialParams={{ day: 2 }}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Ionicons
+                name="today-outline"
+                size={24}
+                color={focused ? Colors.primary : Colors.darkGray}
+              />
+            ),
+          }}
+        />
+      )}
     </Tab.Navigator>
   );
 });
