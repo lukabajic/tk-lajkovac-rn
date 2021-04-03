@@ -38,10 +38,64 @@ export const fetchSchedule = (token) => async (dispatch) => {
   }
 };
 
-export const scheduleTime = (token, court, time, day, action = "") => async (
-  dispatch,
-  getState
-) => {
+export const adminScheduleTime = ({
+  token,
+  court,
+  start,
+  day,
+  userName,
+  action = "",
+}) => async (dispatch, getState) => {
+  dispatch(scheduleStart());
+
+  const URL = SERVER_URL + API + "schedule-day/edit-admin";
+  const days = ["today", "tomorrow", "dayAfter"];
+
+  try {
+    const res = await fetch(URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        court,
+        start,
+        day: days[day],
+        action,
+        userName,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!data.error) {
+      const schedule = [...getState().schedule.schedule];
+
+      const { editedUser, editedScheduleDay } = data;
+
+      const index = schedule.findIndex((d) => d.date === getBackendDate(day));
+      schedule[index] = editedScheduleDay;
+
+      dispatch(scheduleSuccess(schedule));
+      dispatch(userSuccess(editedUser));
+      return data.message;
+    } else {
+      dispatch(scheduleFail(data.error));
+      return false;
+    }
+  } catch (err) {
+    dispatch(scheduleFail(err.message || err));
+  }
+};
+
+export const scheduleTime = ({
+  token,
+  court,
+  start,
+  day,
+  action = "",
+}) => async (dispatch, getState) => {
   dispatch(scheduleStart());
 
   const URL = SERVER_URL + API + "schedule-day/edit";
@@ -56,7 +110,7 @@ export const scheduleTime = (token, court, time, day, action = "") => async (
       },
       body: JSON.stringify({
         court,
-        time,
+        start,
         day: days[day],
         action,
       }),
