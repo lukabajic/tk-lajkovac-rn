@@ -107,7 +107,7 @@ const User = ({ item }) => {
   );
 };
 
-const Users = ({ fetchAllUsers, users, token, loading }) => {
+const Users = ({ fetchAllUsers, users, user, token, loading }) => {
   useEffect(() => {
     if (!users) fetchAllUsers(token);
   }, [users, token, fetchAllUsers]);
@@ -120,7 +120,7 @@ const Users = ({ fetchAllUsers, users, token, loading }) => {
         Spisak članova
       </LargeTitle>
       <FlatList
-        data={users}
+        data={users.filter((u) => u.userId !== user.userId)}
         style={styles.users}
         keyExtractor={(item) => item.userId}
         ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
@@ -172,6 +172,7 @@ export default connect(
   (state) => ({
     token: state.auth.token,
     users: state.user.users,
+    user: state.user.user,
     loading: state.user.loading,
   }),
   { fetchAllUsers }

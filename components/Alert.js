@@ -23,7 +23,9 @@ const Alert = ({ type, message }) => {
         size={24}
         color={type === "danger" ? colors.red : colors.primary}
       />
-      <Text style={textStyles}>{message}</Text>
+      <Text style={textStyles}>
+        {typeof message === "string" ? message : ""}
+      </Text>
     </View>
   );
 };

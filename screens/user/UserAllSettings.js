@@ -45,7 +45,7 @@ const UserAllSettings = ({ user, navigation }) => {
     },
     {
       to: "ChangePassword",
-      data: [{ label: "Šifra", value: "********" }],
+      data: [{ label: "Lozinka", value: "********" }],
     },
   ];
 

@@ -23,10 +23,14 @@ const ChangeNameScreen = ({
   const onSubmit = async () => {
     const { password, oldPassword } = form.values;
 
-    await updateData(token, "UPDATE_PASSWORD", { oldPassword, password });
-
-    setForm(userPasswordForm);
-    navigation.goBack();
+    updateData(token, "UPDATE_PASSWORD", { oldPassword, password }).then(
+      (res) => {
+        if (res) {
+          setForm(userPasswordForm);
+          navigation.goBack();
+        }
+      }
+    );
   };
 
   const isFormValid = () =>

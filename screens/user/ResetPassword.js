@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -96,16 +96,16 @@ const ResetPassword = ({
   return (
     <FormScreen
       title={!email ? "Pošaljite novu lozinku na svoj email" : "Ulogujte se"}
-      subtitle={email && "Poslali smo novu šifru na vašu email adresu."}
+      subtitle={email ? "Poslali smo novu šifru na vašu email adresu." : null}
       error={error}
     >
-      {email && (
+      {email ? (
         <Info
           label="Email"
           value={email}
           style={{ marginBottom: 16, width: "100%", maxWidth: 320 }}
         />
-      )}
+      ) : null}
       <FormFields form={form} setForm={setForm} />
       <View>
         <Button
@@ -124,6 +124,12 @@ const ResetPassword = ({
     </FormScreen>
   );
 };
+
+const BottomContent = () => (
+  <View>
+    <Text>Cao</Text>
+  </View>
+);
 
 export default connect(
   (state) => ({

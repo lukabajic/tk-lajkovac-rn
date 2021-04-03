@@ -193,7 +193,7 @@ export const userPasswordForm = {
   fields: {
     oldPassword: {
       type: "password",
-      label: "Ponovite lozinku",
+      label: "Stara lozinka",
       placeholder: "********",
       autoFocus: false,
       meta: {
@@ -204,7 +204,7 @@ export const userPasswordForm = {
     },
     password: {
       type: "newPassword",
-      label: "Lozinka",
+      label: "Nova lozinka",
       placeholder: "********",
       autoFocus: false,
       meta: {

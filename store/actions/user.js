@@ -32,8 +32,10 @@ export const updateData = (token, action, body) => async (dispatch) => {
 
     if (!data.error) {
       dispatch(userSuccess(data.user));
+      return true;
     } else {
       dispatch(userFail(data.error));
+      return false;
     }
   } catch (err) {
     dispatch(userFail(err.message || err));

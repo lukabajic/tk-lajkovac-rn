@@ -14,7 +14,6 @@ import { LargeTitle, Headline } from "./Typography";
 const FormScreen = ({ children, title, subtitle, bottomContent, error }) => (
   <SafeAreaView style={styles.screen}>
     <KeyboardAvoidingView
-      // android add
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={40}
       style={styles.wrapper}

@@ -61,7 +61,7 @@ const NoInfoScreen = connect(
   return (
     <FormScreen title="Vaše informacije" error={error}>
       <FormFields form={form} setForm={setForm} />
-      <View style={styles.actions}>
+      <View>
         <Button primary square onPress={onSubmit} disabled={!isFormValid()}>
           <Ionicons
             name="arrow-forward"
