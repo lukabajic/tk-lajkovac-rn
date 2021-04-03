@@ -65,19 +65,25 @@ const QuickSchedule = connect(
     schedule: state.schedule.schedule,
     loading: state.schedule.loading,
     isAdmin: state.user.user.isAdmin,
+    user: state.user.user,
   }),
   { fetchSchedule }
-)(({ schedule, token, fetchSchedule, loading, navigation, isAdmin }) => {
+)(({ schedule, token, fetchSchedule, loading, navigation, isAdmin, user }) => {
   useEffect(() => {
     if (!schedule) fetchSchedule(token);
   }, []);
 
+  const hasBooking = user.schedule?.find((b) => b.date === getBackendDate(0));
   const times = selectQuickTimes(schedule);
 
   return (
     <View style={[styles.quickSchedule, styles.withBorder]}>
       {loading ? (
         <Loader contentContainerStyle={{ marginVertical: 32 }} />
+      ) : hasBooking ? (
+        <Subheadline style={{ textAlign: "center" }}>
+          Već imate zakazan termin za ovaj dan.
+        </Subheadline>
       ) : times.length ? (
         times.map((t, i) => (
           <ScheduleTime
