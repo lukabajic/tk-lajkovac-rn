@@ -6,6 +6,7 @@ export const signInForm = {
   },
   fields: {
     email: {
+      order: 0,
       type: "emailAddress",
       label: "Email",
       placeholder: "primer@gmail.com",
@@ -18,6 +19,7 @@ export const signInForm = {
       },
     },
     password: {
+      order: 1,
       type: "password",
       label: "Lozinka",
       placeholder: "********",
@@ -39,6 +41,7 @@ export const signUpForm = {
     confPassword: "",
   },
   fields: {
+    order: 0,
     email: {
       type: "emailAddress",
       label: "Email",
@@ -52,6 +55,7 @@ export const signUpForm = {
       },
     },
     password: {
+      order: 1,
       type: "newPassword",
       label: "Lozinka",
       placeholder: "********",
@@ -63,6 +67,7 @@ export const signUpForm = {
       },
     },
     confPassword: {
+      order: 2,
       type: "password",
       label: "Ponovite lozinku",
       placeholder: "********",
@@ -84,6 +89,7 @@ export const userDataForm = {
   },
   fields: {
     displayName: {
+      order: 0,
       type: "name",
       label: "Ime i prezime",
       placeholder: "Novak Đoković",
@@ -95,6 +101,7 @@ export const userDataForm = {
       },
     },
     phone: {
+      order: 1,
       type: "telephoneNumber",
       label: "Broj telefona",
       placeholder: "063 982 0611",
@@ -117,6 +124,7 @@ export const userNameForm = (user) => ({
   },
   fields: {
     firstName: {
+      order: 0,
       type: "name",
       label: "Ime",
       placeholder: "Novak",
@@ -128,6 +136,7 @@ export const userNameForm = (user) => ({
       },
     },
     lastName: {
+      order: 1,
       type: "name",
       label: "Prezime",
       placeholder: "Đoković",
@@ -148,6 +157,7 @@ export const userPhoneForm = (user) => ({
   },
   fields: {
     phone: {
+      order: 0,
       type: "telephoneNumber",
       label: "Broj telefona",
       placeholder: "063 982 0611",
@@ -169,6 +179,7 @@ export const userEmailForm = (user) => ({
   },
   fields: {
     email: {
+      order: 0,
       type: "emailAddress",
       label: "Email",
       placeholder: "primer@gmail.com",
@@ -192,6 +203,7 @@ export const userPasswordForm = {
   },
   fields: {
     oldPassword: {
+      order: 0,
       type: "password",
       label: "Stara lozinka",
       placeholder: "********",
@@ -203,6 +215,7 @@ export const userPasswordForm = {
       },
     },
     password: {
+      order: 1,
       type: "newPassword",
       label: "Nova lozinka",
       placeholder: "********",
@@ -214,6 +227,7 @@ export const userPasswordForm = {
       },
     },
     confPassword: {
+      order: 2,
       type: "password",
       label: "Ponovite lozinku",
       placeholder: "********",

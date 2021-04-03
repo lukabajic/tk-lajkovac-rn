@@ -35,9 +35,11 @@ const SignUp = ({
   const onSubmit = () => {
     const { email, password } = form.values;
 
-    auth("/register", email, password);
-
-    setForm(signUpForm);
+    auth("/register", email, password).then((res) => {
+      if (res) {
+        setForm(signUpForm);
+      }
+    });
   };
 
   if (loading) return <Loader />;

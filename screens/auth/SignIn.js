@@ -33,9 +33,11 @@ const SignIn = ({
   const onSubmit = () => {
     const { email, password } = form.values;
 
-    auth("/login", email, password);
-
-    setForm(signInForm);
+    auth("/login", email, password).then((res) => {
+      if (res) {
+        setForm(signInForm);
+      }
+    });
   };
 
   if (loading) return <Loader />;

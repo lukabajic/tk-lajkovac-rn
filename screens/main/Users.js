@@ -146,6 +146,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 1, height: 2 },
     shadowRadius: 4,
     borderRadius: 4,
+    elevation: 3,
+    margin: 3,
   },
   userHeader: {
     flexDirection: "row",

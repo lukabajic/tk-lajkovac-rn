@@ -47,22 +47,24 @@ const FormFields = ({ form, setForm, style = {}, prefill }) => {
 
   return (
     <View style={[styles.wrapper, style]}>
-      {Object.keys(form.fields).map((field, index) => (
-        <Field
-          key={field}
-          label={form.fields[field].label}
-          type={form.fields[field].type}
-          placeholder={form.fields[field].placeholder}
-          meta={form.fields[field].meta}
-          onChange={(value) => onChangeHandler(field, value)}
-          onBlur={() => onBlurHandler(field, form.values[field])}
-          value={form.values[field]}
-          autoFocus={form.fields[field].autoFocus}
-          keyboardType={form.fields[field].keyboardType || "default"}
-          spacing={Object.keys(form.fields).length > index}
-          prefill={prefill?.includes(field)}
-        />
-      ))}
+      {Object.keys(form.fields)
+        .sort((keyA, keyB) => form.fields[keyA].order - form.fields[keyB].order)
+        .map((field, index) => (
+          <Field
+            key={field + index}
+            label={form.fields[field].label}
+            type={form.fields[field].type}
+            placeholder={form.fields[field].placeholder}
+            meta={form.fields[field].meta}
+            onChange={(value) => onChangeHandler(field, value)}
+            onBlur={() => onBlurHandler(field, form.values[field])}
+            value={form.values[field]}
+            autoFocus={form.fields[field].autoFocus}
+            keyboardType={form.fields[field].keyboardType || "default"}
+            spacing={Object.keys(form.fields).length > index}
+            prefill={prefill?.includes(field)}
+          />
+        ))}
     </View>
   );
 };

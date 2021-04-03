@@ -88,7 +88,11 @@ const ResetPassword = ({
   const login = () => {
     const { password } = form.values;
 
-    auth("/login", email, password);
+    auth("/login", email, password).then((res) => {
+      if (res) {
+        setForm(INITIAL_FORM);
+      }
+    });
   };
 
   if (loading) return <Loader />;

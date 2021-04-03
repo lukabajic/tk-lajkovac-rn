@@ -36,6 +36,7 @@ const FormScreen = ({ children, title, subtitle, bottomContent, error }) => (
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    paddingBottom: 10,
   },
   wrapper: {
     flexGrow: 1,

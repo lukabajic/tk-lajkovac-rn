@@ -43,8 +43,10 @@ export const auth = (action, email, password) => async (dispatch) => {
       dispatch(authSuccess(token, expirationDate));
       dispatch(userSuccess(user));
       dispatch(setAuthTimeout(expiresIn));
+      return true;
     } else {
       dispatch(authFail(data.error));
+      return false;
     }
   } catch (err) {
     dispatch(authFail(err));
