@@ -3,12 +3,14 @@ import { connect } from "react-redux";
 import { View, StyleSheet } from "react-native";
 
 import Loader from "../../components/Loader";
-import { fetchSchedule } from "../../store/actions";
+import { fetchSchedule, fetchAllUsers } from "../../store/actions";
 import ScheduleBody from "../../components/ScheduleBody";
 
 const Schedule = ({
   schedule,
+  users,
   fetchSchedule,
+  fetchAllUsers,
   token,
   loading,
   route,
@@ -16,7 +18,8 @@ const Schedule = ({
 }) => {
   useEffect(() => {
     if (!schedule) fetchSchedule(token);
-  }, [schedule, token, fetchSchedule]);
+    if (!users) fetchAllUsers(token);
+  }, []);
 
   if (loading || !schedule) return <Loader />;
 
@@ -25,7 +28,12 @@ const Schedule = ({
 
   return (
     <View style={styles.screen}>
-      <ScheduleBody schedule={scheduleDay} day={day} navigation={navigation} />
+      <ScheduleBody
+        schedule={scheduleDay}
+        day={day}
+        navigation={navigation}
+        users={users}
+      />
     </View>
   );
 };
@@ -40,10 +48,12 @@ const styles = StyleSheet.create({
 export default connect(
   (state) => ({
     schedule: state.schedule.schedule,
-    loading: state.schedule.loading,
+    loading: state.schedule.loading || state.user.loading,
     token: state.auth.token,
+    users: state.user.users,
   }),
   {
     fetchSchedule,
+    fetchAllUsers,
   }
 )(Schedule);
