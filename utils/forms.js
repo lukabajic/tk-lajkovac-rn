@@ -41,8 +41,8 @@ export const signUpForm = {
     confPassword: "",
   },
   fields: {
-    order: 0,
     email: {
+      order: 0,
       type: "emailAddress",
       label: "Email",
       placeholder: "primer@gmail.com",
