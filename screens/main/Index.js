@@ -64,9 +64,10 @@ const QuickSchedule = connect(
     token: state.auth.token,
     schedule: state.schedule.schedule,
     loading: state.schedule.loading,
+    isAdmin: state.user.user.isAdmin,
   }),
   { fetchSchedule }
-)(({ schedule, token, fetchSchedule, loading, navigation }) => {
+)(({ schedule, token, fetchSchedule, loading, navigation, isAdmin }) => {
   useEffect(() => {
     if (!schedule) fetchSchedule(token);
   }, []);
@@ -86,6 +87,7 @@ const QuickSchedule = connect(
             court={t.court}
             navigation={navigation}
             notLast={i + 1 < times.length}
+            isAdmin={isAdmin}
           />
         ))
       ) : (
@@ -107,7 +109,6 @@ const Index = ({
 }) => {
   useEffect(() => {
     if (token) {
-      console.log(token);
       const socket = OpenSocket("http://localhost:8000");
       socket.on("schedule", (data) => {
         switch (data.action) {

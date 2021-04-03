@@ -21,8 +21,16 @@ import Info from "../components/Info";
 import getDate from "../utils/getDate";
 import { scheduleTime } from "../store/actions";
 
-export const ScheduleTime = ({ item, navigation, day, court, notLast }) => {
-  const { taken, start, end } = item;
+export const ScheduleTime = ({
+  item,
+  navigation,
+  day,
+  court,
+  notLast,
+  isAdmin,
+  users,
+}) => {
+  const { taken, start, end, userId, userName, _id } = item;
 
   const scheduleTimeStyles = [styles.scheduleTime];
   taken && scheduleTimeStyles.push(styles.scheduleTimeTaken);
@@ -30,21 +38,21 @@ export const ScheduleTime = ({ item, navigation, day, court, notLast }) => {
   const scheduleTimeBeforeStyles = [styles.scheduleTimeBefore];
   taken && scheduleTimeBeforeStyles.push(styles.scheduleTimeBeforeTaken);
 
+  const user = users?.find((u) => u.userId === userId);
+  const name = user || userName;
+
   return (
     <Pressable
       style={scheduleTimeStyles}
-      onPress={
-        !taken
-          ? async () => {
-              await navigation.navigate("ScheduleDaysTabs");
-              navigation.navigate("Booking", { start, end, day, court });
-            }
-          : null
-      }
+      disabled={taken && !isAdmin}
+      onPress={async () => {
+        await navigation.navigate("ScheduleDaysTabs");
+        navigation.navigate("Booking", { _id, day, court, isAdmin });
+      }}
     >
       <View style={scheduleTimeBeforeStyles} />
       <Headline style={{ color: Colors.darkGray }}>
-        {taken ? "Zuazet termin" : "Slobodan termin"}
+        {taken ? (isAdmin ? name : "Zauzet termin") : "Slobodan termin"}
       </Headline>
       <View style={styles.scheduleWhen}>
         <Subheadline style={[styles.timeFont, styles.startTime]}>
@@ -65,6 +73,8 @@ const ScheduleCourt = ({
   isSliding,
   navigation,
   day,
+  user,
+  users,
 }) => {
   const { number, times } = item;
 
@@ -105,6 +115,8 @@ const ScheduleCourt = ({
             item={item}
             day={day}
             court={number}
+            isAdmin={user?.isAdmin}
+            users={users}
           />
         )}
       />
@@ -115,7 +127,7 @@ const ScheduleCourt = ({
 const AlreadyBooked = ({ day, court, time, scheduleTime, token, error }) => (
   <View style={styles.alreadyBooked}>
     <View style={styles.alreadyBookedContent}>
-      <Alert message={error} type="danger" />
+      {error && <Alert message={error} type="danger" />}
       <TitleTwo style={{ marginBottom: 32, marginTop: 16 }}>
         Već imate zakazan termin za ovaj dan.
       </TitleTwo>
@@ -141,7 +153,9 @@ const AlreadyBooked = ({ day, court, time, scheduleTime, token, error }) => (
         tertiary
         default
         fluid
-        onPress={() => scheduleTime(token, court, time, day, "cancel")}
+        onPress={() =>
+          scheduleTime({ token, court, time, day, action: "cancel" })
+        }
       >
         Otkaži
       </Button>
@@ -175,6 +189,7 @@ class ScheduleBody extends Component {
       navigation,
       day,
       user,
+      users,
       scheduleTime,
       token,
       error,
@@ -186,7 +201,7 @@ class ScheduleBody extends Component {
       (b) => b.date === getBackendDate(day)
     );
 
-    if (hasBooking)
+    if (hasBooking && !user?.isAdmin)
       return (
         <AlreadyBooked
           day={day}
@@ -216,6 +231,8 @@ class ScheduleBody extends Component {
             item={item}
             onNext={() => this._carousel.snapToNext()}
             onPrev={() => this._carousel.snapToPrev()}
+            user={user}
+            users={users}
           />
         )}
       />

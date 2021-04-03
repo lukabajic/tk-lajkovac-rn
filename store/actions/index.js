@@ -20,4 +20,5 @@ export {
   createDay,
   deleteDay,
   updateDay,
+  adminScheduleTime,
 } from "./schedule";

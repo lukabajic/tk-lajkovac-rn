@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   KeyboardAvoidingView,
   ScrollView,
@@ -12,13 +11,22 @@ import { connect } from "react-redux";
 
 import { formatTime } from "../../utils/format";
 import getDate from "../../utils/getDate";
-import Colors from "../../utils/colors";
 import Loader from "../../components/Loader";
+import Field from "../../components/Field";
 import Button from "../../components/Button";
 import Info from "../../components/Info";
-import Field from "../../components/Field";
-import { TitleOne, Footnote } from "../../components/Typography";
-import { scheduleTime } from "../../store/actions";
+import { TitleOne } from "../../components/Typography";
+import { scheduleTime, adminScheduleTime } from "../../store/actions";
+
+const selectTime = (schedule, id) => {
+  const times = [];
+
+  schedule.forEach((s) =>
+    s.courts.forEach((c) => c.times.forEach((t) => times.push(t)))
+  );
+
+  return times.find((t) => t._id === id);
+};
 
 const Booking = ({
   route,
@@ -26,15 +34,29 @@ const Booking = ({
   scheduleTime,
   token,
   loading,
+  users,
   error,
+  schedule,
+  adminScheduleTime,
 }) => {
-  const { start, end, day, court } = route.params;
+  const { _id, day, court, isAdmin } = route.params;
   // const [opponenet, setOpponent] = useState("");
+  const {
+    start,
+    end,
+    userName: pUserName = "",
+    userId = "",
+    taken,
+  } = selectTime(schedule, _id);
+  const [userName, setUserName] = useState(pUserName);
 
   if (loading) return <Loader />;
 
+  const user = users?.find((u) => u.userId === userId);
+  const name = user?.data.displayName || userName;
+
   const handleBooking = () => {
-    scheduleTime(token, court, start, day).then((res) => {
+    scheduleTime({ token, court, start, day }).then((res) => {
       if (!res && error) {
         Alert.alert("Došlo je do greške", error, [
           {
@@ -44,7 +66,7 @@ const Booking = ({
           },
         ]);
       } else {
-        Alert.alert("Zakazano", res, [
+        Alert.alert("Termin zakazan", res, [
           {
             text: "U redu",
             onPress: () => navigation.goBack(),
@@ -55,6 +77,32 @@ const Booking = ({
     });
   };
 
+  const handleAdminBooking = (action = "") => {
+    adminScheduleTime({ token, court, start, day, userName, action }).then(
+      (res) => {
+        if (!res && error) {
+          Alert.alert("Došlo je do greške", error, [
+            {
+              text: "Nazad",
+              style: "cancel",
+            },
+          ]);
+        } else {
+          Alert.alert(
+            action === "cancel" ? "Termin otkazan" : "Termin zakazan",
+            res,
+            [
+              {
+                text: "U redu",
+                style: "cancel",
+              },
+            ]
+          );
+        }
+      }
+    );
+  };
+
   return (
     <SafeAreaView style={styles.screen}>
       <KeyboardAvoidingView
@@ -63,27 +111,16 @@ const Booking = ({
         style={styles.wrapper}
       >
         <ScrollView style={styles.description}>
-          <TitleOne style={{ marginBottom: 32 }}>Zakažite termin</TitleOne>
-          <Info
-            label="Datum"
-            value={getDate(day).string}
-            style={{ marginBottom: 16 }}
-          />
-          <Info
-            label="Teren"
-            value={`Broj ${court}`}
-            style={{ marginBottom: 16 }}
-          />
-          <Info
-            label="Počinje"
-            value={formatTime(start)}
-            style={{ marginBottom: 16 }}
-          />
-          <Info
-            label="Završava se"
-            value={formatTime(end)}
-            style={{ marginBottom: 16 }}
-          />
+          {taken && isAdmin ? (
+            <TakenTime name={name} />
+          ) : (
+            <FreeTime
+              isAdmin={isAdmin}
+              userName={userName}
+              setUserName={setUserName}
+            />
+          )}
+          <Information day={day} court={court} start={start} end={end} />
           {/* otom potom */}
           {/* <Field
             label="Ime protivnika"
@@ -95,9 +132,31 @@ const Booking = ({
           /> */}
         </ScrollView>
         <View style={styles.actions}>
-          <Button primary default fluid onPress={handleBooking}>
-            Zakaži
-          </Button>
+          {isAdmin ? (
+            taken ? (
+              <Button
+                primary
+                default
+                fluid
+                onPress={() => handleAdminBooking("cancel")}
+              >
+                Otkaži
+              </Button>
+            ) : (
+              <Button
+                primary
+                default
+                fluid
+                onPress={() => handleAdminBooking("")}
+              >
+                Zakaži
+              </Button>
+            )
+          ) : (
+            <Button primary default fluid onPress={handleBooking}>
+              Zakaži
+            </Button>
+          )}
           <Button tertiary default fluid onPress={() => navigation.goBack()}>
             Nazad
           </Button>
@@ -106,6 +165,50 @@ const Booking = ({
     </SafeAreaView>
   );
 };
+
+const Information = ({ day, court, start, end }) => (
+  <Fragment>
+    <Info
+      label="Datum"
+      value={getDate(day).string}
+      style={{ marginBottom: 16 }}
+    />
+    <Info label="Teren" value={`Broj ${court}`} style={{ marginBottom: 16 }} />
+    <Info
+      label="Počinje"
+      value={formatTime(start)}
+      style={{ marginBottom: 16 }}
+    />
+    <Info
+      label="Završava se"
+      value={formatTime(end)}
+      style={{ marginBottom: 16 }}
+    />
+  </Fragment>
+);
+
+const FreeTime = ({ isAdmin, userName, setUserName }) => {
+  return (
+    <Fragment>
+      <TitleOne style={{ marginBottom: 32 }}>Zakažite termin</TitleOne>
+      {isAdmin && (
+        <Field
+          label="Ime i prezime"
+          value={userName}
+          onChange={setUserName}
+          spacing
+        />
+      )}
+    </Fragment>
+  );
+};
+
+const TakenTime = ({ name }) => (
+  <Fragment>
+    <TitleOne style={{ marginBottom: 32 }}> Otkažite termin</TitleOne>
+    <Info label="Ime člana" value={name} style={{ marginBottom: 16 }} />
+  </Fragment>
+);
 
 const styles = StyleSheet.create({
   screen: {
@@ -129,8 +232,11 @@ export default connect(
     token: state.auth.token,
     loading: state.schedule.loading,
     error: state.schedule.error,
+    users: state.user.users,
+    schedule: state.schedule.schedule,
   }),
   {
     scheduleTime,
+    adminScheduleTime,
   }
 )(Booking);
