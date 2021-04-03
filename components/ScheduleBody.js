@@ -21,6 +21,20 @@ import Info from "../components/Info";
 import getDate from "../utils/getDate";
 import { scheduleTime } from "../store/actions";
 
+const isElapsed = (start, day) => {
+  const hours = Number(start.slice(0, 2));
+  const minutes = Number(start.slice(2, 4));
+
+  const startTime = new Date(getBackendDate(day));
+  startTime.setHours(hours);
+  startTime.setMinutes(minutes);
+
+  const curTime = new Date(Date.now() + day * 86400000);
+  const limit = new Date(startTime.getTime() + 30 * 60000);
+
+  return curTime.getTime() > limit.getTime();
+};
+
 export const ScheduleTime = ({
   item,
   navigation,
@@ -37,6 +51,9 @@ export const ScheduleTime = ({
   notLast && scheduleTimeStyles.push(styles.marginBottom);
   const scheduleTimeBeforeStyles = [styles.scheduleTimeBefore];
   taken && scheduleTimeBeforeStyles.push(styles.scheduleTimeBeforeTaken);
+  isElapsed(start, day) && scheduleTimeStyles.push(styles.unavailable);
+  isElapsed(start, day) &&
+    scheduleTimeBeforeStyles.push(styles.scheduleTimeBeforeElapsed);
 
   const user = users?.find((u) => u.userId === userId);
   const name = user || userName;
@@ -44,7 +61,7 @@ export const ScheduleTime = ({
   return (
     <Pressable
       style={scheduleTimeStyles}
-      disabled={taken && !isAdmin}
+      disabled={(taken && !isAdmin) || isElapsed(start, day)}
       onPress={async () => {
         await navigation.navigate("ScheduleDaysTabs");
         navigation.navigate("Booking", { _id, day, court, isAdmin });
@@ -154,7 +171,7 @@ const AlreadyBooked = ({ day, court, time, scheduleTime, token, error }) => (
         default
         fluid
         onPress={() =>
-          scheduleTime({ token, court, time, day, action: "cancel" })
+          scheduleTime({ token, court, start: time, day, action: "cancel" })
         }
       >
         Otkaži
@@ -264,7 +281,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(38,35,34, 0.2)",
     borderWidth: 1,
   },
-  scheduleTimeTaken: {
+  unavailable: {
     borderWidth: 0,
     backgroundColor: "transparent",
   },
@@ -278,6 +295,9 @@ const styles = StyleSheet.create({
   },
   scheduleTimeBeforeTaken: {
     backgroundColor: Colors.yellow,
+  },
+  scheduleTimeBeforeElapsed: {
+    backgroundColor: Colors.gray,
   },
   timeFont: { fontVariant: ["tabular-nums"] },
   startTime: { color: Colors.darkGray },
