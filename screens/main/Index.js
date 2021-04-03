@@ -69,7 +69,7 @@ const QuickSchedule = connect(
 )(({ schedule, token, fetchSchedule, loading, navigation }) => {
   useEffect(() => {
     if (!schedule) fetchSchedule(token);
-  }, [schedule, token, fetchSchedule]);
+  }, []);
 
   const times = selectQuickTimes(schedule);
 
@@ -112,16 +112,16 @@ const Index = ({
       socket.on("schedule", (data) => {
         switch (data.action) {
           case "create":
-            createDay(data.scheduleDay);
+            data.scheduleDay && createDay(data.scheduleDay);
             break;
 
           case "delete":
-            deleteDay(data.date);
+            data.scheduleDay && deleteDay(data.date);
             break;
 
           case "edit":
-            updateUser(data.user);
-            updateDay(data.scheduleDay);
+            data.user && updateUser(data.user);
+            data.scheduleDay && updateDay(data.scheduleDay);
             break;
 
           default:
