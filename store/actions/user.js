@@ -9,7 +9,7 @@ export const userFail = (error) => ({ type: actionTypes.USER_FAIL, error });
 
 export const userClearError = () => ({ type: actionTypes.USER_CLEAR_ERROR });
 
-const allUsersSuccess = (users) => ({
+export const allUsersSuccess = (users) => ({
   type: actionTypes.ALL_USER_SUCCESS,
   users,
 });
