@@ -21,4 +21,5 @@ export {
   deleteDay,
   updateDay,
   adminScheduleTime,
+  midgnightUpdate,
 } from "./schedule";

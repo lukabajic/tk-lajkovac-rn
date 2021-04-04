@@ -1,6 +1,6 @@
 import { SERVER_URL, API } from "../../variables";
 import * as actionTypes from "./actionTypes";
-import { userSuccess } from "./user";
+import { userSuccess, allUsersSuccess } from "./user";
 import { getBackendDate } from "../../utils/getDate";
 
 const scheduleStart = () => ({ type: actionTypes.SCHEDULE_START });
@@ -30,6 +30,35 @@ export const fetchSchedule = (token) => async (dispatch) => {
     if (!data.error) {
       const { scheduleDays } = data;
       dispatch(scheduleSuccess(scheduleDays));
+    } else {
+      dispatch(scheduleFail(data.error));
+    }
+  } catch (err) {
+    dispatch(scheduleFail(err.message || err));
+  }
+};
+
+export const midgnightUpdate = (token) => async (dispatch) => {
+  dispatch(scheduleStart());
+
+  const URL = SERVER_URL + API + "midnight-update";
+
+  try {
+    const res = await fetch(URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+
+    console.log(data);
+
+    if (!data.error) {
+      const { schedule, users } = data;
+      dispatch(scheduleSuccess(schedule));
+      dispatch(allUsersSuccess(users));
     } else {
       dispatch(scheduleFail(data.error));
     }

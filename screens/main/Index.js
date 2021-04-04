@@ -13,6 +13,7 @@ import {
   createDay,
   updateDay,
   updateUser,
+  midgnightUpdate,
 } from "../../store/actions";
 import Loader from "../../components/Loader";
 import { getBackendDate } from "../../utils/getDate";
@@ -67,43 +68,65 @@ const QuickSchedule = connect(
     isAdmin: state.user.user.isAdmin,
     user: state.user.user,
   }),
-  { fetchSchedule }
-)(({ schedule, token, fetchSchedule, loading, navigation, isAdmin, user }) => {
-  useEffect(() => {
-    if (!schedule) fetchSchedule(token);
-  }, []);
+  { fetchSchedule, midgnightUpdate }
+)(
+  ({
+    schedule,
+    token,
+    fetchSchedule,
+    loading,
+    navigation,
+    isAdmin,
+    user,
+    midgnightUpdate,
+  }) => {
+    useEffect(() => {
+      if (!schedule) fetchSchedule(token);
+    }, []);
 
-  const hasBooking = user.schedule?.find((b) => b.date === getBackendDate(0));
-  const times = selectQuickTimes(schedule);
+    const yesterdayDate = getBackendDate(-1);
+    const hasYesterday = Boolean(
+      schedule?.find((d) => d.date === yesterdayDate)
+    );
 
-  return (
-    <View style={[styles.quickSchedule, styles.withBorder]}>
-      {loading ? (
-        <Loader contentContainerStyle={{ marginVertical: 32 }} />
-      ) : hasBooking ? (
-        <Subheadline style={{ textAlign: "center" }}>
-          Već imate zakazan termin za ovaj dan.
-        </Subheadline>
-      ) : times.length ? (
-        times.map((t, i) => (
-          <ScheduleTime
-            key={i}
-            item={t}
-            day={0}
-            court={t.court}
-            navigation={navigation}
-            notLast={i + 1 < times.length}
-            isAdmin={isAdmin}
-          />
-        ))
-      ) : (
-        <Subheadline style={{ textAlign: "center" }}>
-          Nema slobodnih termina do kraja dana
-        </Subheadline>
-      )}
-    </View>
-  );
-});
+    useEffect(() => {
+      if (hasYesterday) {
+        midgnightUpdate(token);
+      }
+    }, []);
+
+    const hasBooking = user.schedule?.find((b) => b.date === getBackendDate(0));
+    const times = selectQuickTimes(schedule);
+
+    return (
+      <View style={[styles.quickSchedule, styles.withBorder]}>
+        {loading ? (
+          <Loader contentContainerStyle={{ marginVertical: 32 }} />
+        ) : hasBooking ? (
+          <Subheadline style={{ textAlign: "center" }}>
+            Već imate zakazan termin za ovaj dan.
+          </Subheadline>
+        ) : times.length ? (
+          times.map((t, i) => (
+            <ScheduleTime
+              key={i}
+              item={t}
+              day={0}
+              court={t.court}
+              navigation={navigation}
+              notLast={i + 1 < times.length}
+              isAdmin={isAdmin}
+            />
+          ))
+        ) : (
+          <Subheadline style={{ textAlign: "center" }}>
+            Nema slobodnih termina do kraja dana
+          </Subheadline>
+        )}
+      </View>
+    );
+  }
+);
 
 const Index = ({
   navigation,
