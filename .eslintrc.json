@@ -1,0 +1,31 @@
+{
+  "env": {
+    "commonjs": true,
+    "es6": true,
+    "react-native/react-native": true
+  },
+  "plugins": [
+    "react",
+    "react-native"
+  ],
+  "extends": [
+    "standard"
+  ],
+  "rules": {
+    "semi": [
+      2,
+      "always"
+    ],
+    "object-curly-spacing": [
+      "error",
+      "always"
+    ],
+    "no-unused-vars": "warn"
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  }
+}
+
