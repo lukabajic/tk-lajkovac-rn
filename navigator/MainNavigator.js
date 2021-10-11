@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 
-import NoTokenStack from "./NoTokenStack";
-import NoInfoScreen from "../screens/user/NoInfoScreen";
-import PleaseVerifyScreen from "../screens/user/PleaseVerifyScreen";
-import MainDrawer from "./MainDrawer";
-import { checkExpiration } from "../store/actions";
+import NoTokenStack from './NoTokenStack';
+import NoInfoScreen from '../screens/user/NoInfoScreen';
+import PleaseVerifyScreen from '../screens/user/PleaseVerifyScreen';
+import MainDrawer from './MainDrawer';
+import { checkExpiration } from '../store/actions';
 
-const MainNavigator = ({ token, user, loading, checkExpiration }) => {
+const MainNavigator = ({ token, user, checkExpiration }) => {
   useEffect(() => {
     if (token && !user) checkExpiration();
   }, [token, user]);
