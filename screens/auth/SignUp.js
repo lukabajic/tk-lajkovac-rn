@@ -36,7 +36,7 @@ const SignUp = ({
     const { email, password } = form.values;
 
     auth("/register", email, password).then((res) => {
-      if (res) {
+      if (!res) {
         setForm(signUpForm);
       }
     });

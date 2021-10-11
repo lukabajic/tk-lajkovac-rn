@@ -34,7 +34,7 @@ const SignIn = ({
     const { email, password } = form.values;
 
     auth("/login", email, password).then((res) => {
-      if (res) {
+      if (!res) {
         setForm(signInForm);
       }
     });
