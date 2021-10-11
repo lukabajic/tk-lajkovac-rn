@@ -1,25 +1,25 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   FlatList,
   StyleSheet,
   View,
   TouchableOpacity,
   Pressable,
-} from "react-native";
-import Carousel from "react-native-snap-carousel";
-import { Dimensions } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { connect } from "react-redux";
+} from 'react-native';
+import Carousel from 'react-native-snap-carousel';
+import { Dimensions } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { connect } from 'react-redux';
 
-import { TitleTwo, Headline, Subheadline } from "../components/Typography";
-import Colors from "../utils/colors";
-import { formatTime } from "../utils/format";
-import { getBackendDate } from "../utils/getDate";
-import Button from "../components/Button";
-import Alert from "../components/Alert";
-import Info from "../components/Info";
-import getDate from "../utils/getDate";
-import { scheduleTime } from "../store/actions";
+import { TitleTwo, Headline, Subheadline } from '../components/Typography';
+import Colors from '../utils/colors';
+import { formatTime } from '../utils/format';
+import { getBackendDate } from '../utils/getDate';
+import Button from '../components/Button';
+import Alert from '../components/Alert';
+import Info from '../components/Info';
+import getDate from '../utils/getDate';
+import { scheduleTime } from '../store/actions';
 
 const isElapsed = (start, day) => {
   const hours = Number(start.slice(0, 2));
@@ -56,20 +56,20 @@ export const ScheduleTime = ({
     scheduleTimeBeforeStyles.push(styles.scheduleTimeBeforeElapsed);
 
   const user = users?.find((u) => u.userId === userId);
-  const name = user || userName;
+  const name = userName || user?.data?.displayName || '';
 
   return (
     <Pressable
       style={scheduleTimeStyles}
       disabled={(taken && !isAdmin) || isElapsed(start, day)}
       onPress={async () => {
-        await navigation.navigate("ScheduleDaysTabs");
-        navigation.navigate("Booking", { _id, day, court, isAdmin });
+        await navigation.navigate('ScheduleDaysTabs');
+        navigation.navigate('Booking', { _id, day, court, isAdmin });
       }}
     >
       <View style={scheduleTimeBeforeStyles} />
       <Headline style={{ color: Colors.darkGray }}>
-        {taken ? (isAdmin ? name : "Zauzet termin") : "Slobodan termin"}
+        {taken ? (isAdmin ? name : 'Zauzet termin') : 'Slobodan termin'}
       </Headline>
       <View style={styles.scheduleWhen}>
         <Subheadline style={[styles.timeFont, styles.startTime]}>
@@ -107,8 +107,8 @@ const ScheduleCourt = ({
             />
           </TouchableOpacity>
         )}
-        <TitleTwo style={{ color: Colors.black, textAlign: "center", flex: 1 }}>
-          {" "}
+        <TitleTwo style={{ color: Colors.black, textAlign: 'center', flex: 1 }}>
+          {' '}
           Teren br. {number}
         </TitleTwo>
         {!isSliding && (
@@ -171,7 +171,7 @@ const AlreadyBooked = ({ day, court, time, scheduleTime, token, error }) => (
         default
         fluid
         onPress={() =>
-          scheduleTime({ token, court, start: time, day, action: "cancel" })
+          scheduleTime({ token, court, start: time, day, action: 'cancel' })
         }
       >
         Otkaži
@@ -185,16 +185,6 @@ const AlreadyBooked = ({ day, court, time, scheduleTime, token, error }) => (
   </View>
 );
 
-@connect(
-  (state) => ({
-    user: state.user.user,
-    token: state.auth.token,
-    error: state.schedule.error,
-  }),
-  {
-    scheduleTime,
-  }
-)
 class ScheduleBody extends Component {
   state = {
     isSliding: false,
@@ -212,7 +202,7 @@ class ScheduleBody extends Component {
       error,
     } = this.props;
     const { isSliding } = this.state;
-    const windowWidth = Dimensions.get("window").width;
+    const windowWidth = Dimensions.get('window').width;
 
     const hasBooking = user.schedule?.find(
       (b) => b.date === getBackendDate(day)
@@ -263,30 +253,30 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   courtHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 32,
   },
   scheduleTime: {
-    position: "relative",
+    position: 'relative',
     height: 64,
-    width: "100%",
+    width: '100%',
     paddingLeft: 28,
     paddingRight: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     borderRadius: 10,
     backgroundColor: Colors.white,
-    borderColor: "rgba(38,35,34, 0.2)",
+    borderColor: 'rgba(38,35,34, 0.2)',
     borderWidth: 1,
   },
   unavailable: {
     borderWidth: 0,
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
   },
   scheduleTimeBefore: {
-    position: "absolute",
+    position: 'absolute',
     height: 64,
     width: 12,
     borderTopLeftRadius: 10,
@@ -299,7 +289,7 @@ const styles = StyleSheet.create({
   scheduleTimeBeforeElapsed: {
     backgroundColor: Colors.gray,
   },
-  timeFont: { fontVariant: ["tabular-nums"] },
+  timeFont: { fontVariant: ['tabular-nums'] },
   startTime: { color: Colors.darkGray },
   endTime: { color: Colors.gray },
   alreadyBooked: { flex: 1 },
@@ -307,4 +297,13 @@ const styles = StyleSheet.create({
   marginBottom: { marginBottom: 12 },
 });
 
-export default ScheduleBody;
+export default connect(
+  (state) => ({
+    user: state.user.user,
+    token: state.auth.token,
+    error: state.schedule.error,
+  }),
+  {
+    scheduleTime,
+  }
+)(ScheduleBody);
