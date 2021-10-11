@@ -1,125 +1,71 @@
-import React, { useEffect } from "react";
-import { SafeAreaView, StyleSheet, View, ScrollView } from "react-native";
-import { connect } from "react-redux";
-import OpenSocket from "socket.io-client";
+import React, { useEffect } from 'react';
+import { SafeAreaView, StyleSheet, View, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
+import OpenSocket from 'socket.io-client';
 
-import { LargeTitle, TitleTwo, Subheadline } from "../../components/Typography";
-import Colors from "../../utils/colors";
-import Button from "../../components/Button";
-import { ScheduleTime } from "../../components/ScheduleBody";
+import { LargeTitle, TitleTwo, Subheadline } from '../../components/Typography';
+import Colors from '../../utils/colors';
+import Button from '../../components/Button';
+import { ScheduleTime } from '../../components/ScheduleBody';
 import {
-  fetchSchedule,
+  fetchQuickSchedle,
   deleteDay,
   createDay,
   updateDay,
   updateUser,
-  midgnightUpdate,
-} from "../../store/actions";
-import Loader from "../../components/Loader";
-import { getBackendDate } from "../../utils/getDate";
-
-const selectQuickTimes = (schedule) => {
-  if (!schedule) return [];
-
-  const courts = schedule?.find((d) => d.date === getBackendDate(0))?.courts;
-
-  const times = [];
-
-  courts?.forEach((c) =>
-    c.times.forEach((t) => {
-      if (t.taken) return;
-
-      const hours = new Date().getHours();
-      const startHour = Number(t.start.slice(0, 2));
-
-      if (hours === startHour) {
-        const minutes = new Date().getMinutes();
-        const startMinute = Number(t.start.slice(2, 4));
-
-        if (minutes > startMinute) return;
-      }
-
-      if (hours > startHour) return;
-
-      t.court = c.number;
-      times.push(t);
-    })
-  );
-
-  times.sort((a, b) => {
-    const aHours = Number(a.start.slice(0, 2));
-    const bHours = Number(b.start.slice(0, 2));
-    const aMinutes = Number(a.start.slice(2, 4));
-    const bMinutes = Number(b.start.slice(2, 4));
-
-    if (aHours === bHours) return aMinutes - bMinutes;
-
-    return aHours - bHours;
-  });
-
-  return times.slice(0, 3);
-};
+} from '../../store/actions';
+import Loader from '../../components/Loader';
+import { getBackendDate } from '../../utils/getDate';
 
 const QuickSchedule = connect(
   (state) => ({
     token: state.auth.token,
-    schedule: state.schedule.schedule,
+    quickSchedule: state.schedule.quickSchedule,
     loading: state.schedule.loading,
     isAdmin: state.user.user.isAdmin,
     user: state.user.user,
   }),
-  { fetchSchedule, midgnightUpdate }
+  { fetchQuickSchedle }
 )(
   ({
-    schedule,
+    quickSchedule,
     token,
-    fetchSchedule,
+    fetchQuickSchedle,
     loading,
     navigation,
     isAdmin,
     user,
-    midgnightUpdate,
   }) => {
     useEffect(() => {
-      if (!schedule) fetchSchedule(token);
+      if (!quickSchedule) fetchQuickSchedle(token);
     }, []);
 
-    const yesterdayDate = getBackendDate(-1);
-    const hasYesterday = Boolean(
-      schedule?.find((d) => d.date === yesterdayDate)
+    const hasBooking = user.quickSchedule?.find(
+      (b) => b.date === getBackendDate(0)
     );
-
-    useEffect(() => {
-      if (hasYesterday) {
-        midgnightUpdate(token);
-      }
-    }, []);
-
-    const hasBooking = user.schedule?.find((b) => b.date === getBackendDate(0));
-    const times = selectQuickTimes(schedule);
 
     return (
       <View style={[styles.quickSchedule, styles.withBorder]}>
         {loading ? (
           <Loader contentContainerStyle={{ marginVertical: 32 }} />
         ) : hasBooking ? (
-          <Subheadline style={{ textAlign: "center" }}>
+          <Subheadline style={{ textAlign: 'center' }}>
             Već imate zakazan termin za ovaj dan.
           </Subheadline>
-        ) : times.length ? (
-          times.map((t, i) => (
+        ) : quickSchedule?.length ? (
+          quickSchedule.map((t, i) => (
             <ScheduleTime
               key={i}
               item={t}
               day={0}
               court={t.court}
               navigation={navigation}
-              notLast={i + 1 < times.length}
+              notLast={i + 1 < quickSchedule?.length}
               isAdmin={isAdmin}
             />
           ))
         ) : (
-          <Subheadline style={{ textAlign: "center" }}>
+          <Subheadline style={{ textAlign: 'center' }}>
             Nema slobodnih termina do kraja dana
           </Subheadline>
         )}
@@ -138,18 +84,18 @@ const Index = ({
 }) => {
   useEffect(() => {
     if (token) {
-      const socket = OpenSocket("http://localhost:8000");
-      socket.on("schedule", (data) => {
+      const socket = OpenSocket('http://localhost:8000');
+      socket.on('schedule', (data) => {
         switch (data.action) {
-          case "create":
+          case 'create':
             data.scheduleDay && createDay(data.scheduleDay);
             break;
 
-          case "delete":
+          case 'delete':
             data.scheduleDay && deleteDay(data.date);
             break;
 
-          case "edit":
+          case 'edit':
             data.user && updateUser(data.user);
             data.scheduleDay && updateDay(data.scheduleDay);
             break;
@@ -165,10 +111,10 @@ const Index = ({
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.wrapper}>
         <View style={styles.section}>
-          <LargeTitle style={{ color: Colors.black, textAlign: "center" }}>
+          <LargeTitle style={{ color: Colors.black, textAlign: 'center' }}>
             TK Lajkovac
           </LargeTitle>
-          <LargeTitle style={{ color: Colors.black, textAlign: "center" }}>
+          <LargeTitle style={{ color: Colors.black, textAlign: 'center' }}>
             Zvanična aplikacija
           </LargeTitle>
         </View>
@@ -179,7 +125,7 @@ const Index = ({
             primary
             fluid
             default
-            onPress={() => navigation.navigate("ScheduleDaysTabs")}
+            onPress={() => navigation.navigate('ScheduleDaysTabs')}
           >
             Pregledaj sve
           </Button>
@@ -190,7 +136,7 @@ const Index = ({
             primary
             fluid
             default
-            onPress={() => navigation.navigate("UsersStack")}
+            onPress={() => navigation.navigate('UsersStack')}
           >
             Pregledaj članove
           </Button>
@@ -204,37 +150,37 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     paddingHorizontal: 10,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   info: {
     marginTop: 12,
   },
   callout: {
     color: Colors.darkGray,
-    textAlign: "center",
+    textAlign: 'center',
   },
   actions: {
-    width: "100%",
+    width: '100%',
     marginTop: 18,
   },
   section: {
-    width: "100%",
+    width: '100%',
     marginBottom: 32,
   },
   withBorder: {
-    borderColor: "rgba(38,35,34,0.1)",
+    borderColor: 'rgba(38,35,34,0.1)',
     borderWidth: 1,
     borderRadius: 4,
     padding: 16,
     marginVertical: 8,
   },
   callToAction: {
-    textAlign: "center",
+    textAlign: 'center',
   },
   news: {},
   quickSchedule: {
-    width: "100%",
+    width: '100%',
   },
 });
 

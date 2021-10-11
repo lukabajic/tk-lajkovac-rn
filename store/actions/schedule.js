@@ -1,7 +1,7 @@
-import { SERVER_URL, API } from "../../variables";
-import * as actionTypes from "./actionTypes";
-import { userSuccess, allUsersSuccess } from "./user";
-import { getBackendDate } from "../../utils/getDate";
+import { SERVER_URL, API } from '../../variables';
+import * as actionTypes from './actionTypes';
+import { userSuccess } from './user';
+import { getBackendDate } from '../../utils/getDate';
 
 const scheduleStart = () => ({ type: actionTypes.SCHEDULE_START });
 
@@ -10,16 +10,21 @@ export const scheduleSuccess = (schedule) => ({
   schedule,
 });
 
+export const quickScheduleSuccess = (schedule) => ({
+  type: actionTypes.QUICK_SCHEDULE_SUCCESS,
+  schedule,
+});
+
 const scheduleFail = (error) => ({ type: actionTypes.SCHEDULE_FAIL, error });
 
 export const fetchSchedule = (token) => async (dispatch) => {
   dispatch(scheduleStart());
 
-  const URL = SERVER_URL + API + "schedule-day/get-all";
+  const URL = SERVER_URL + API + 'schedule-day/get-all';
 
   try {
     const res = await fetch(URL, {
-      method: "GET",
+      method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -38,14 +43,14 @@ export const fetchSchedule = (token) => async (dispatch) => {
   }
 };
 
-export const midgnightUpdate = (token) => async (dispatch) => {
+export const fetchQuickSchedle = (token) => async (dispatch) => {
   dispatch(scheduleStart());
 
-  const URL = SERVER_URL + API + "midnight-update";
+  const URL = SERVER_URL + API + 'schedule-day/get-quick';
 
   try {
     const res = await fetch(URL, {
-      method: "POST",
+      method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -53,12 +58,9 @@ export const midgnightUpdate = (token) => async (dispatch) => {
 
     const data = await res.json();
 
-    console.log(data);
-
     if (!data.error) {
-      const { schedule, users } = data;
-      dispatch(scheduleSuccess(schedule));
-      dispatch(allUsersSuccess(users));
+      const { scheduleDays } = data;
+      dispatch(quickScheduleSuccess(scheduleDays));
     } else {
       dispatch(scheduleFail(data.error));
     }
@@ -67,105 +69,96 @@ export const midgnightUpdate = (token) => async (dispatch) => {
   }
 };
 
-export const adminScheduleTime = ({
-  token,
-  court,
-  start,
-  day,
-  userName,
-  action = "",
-}) => async (dispatch, getState) => {
-  dispatch(scheduleStart());
+export const adminScheduleTime =
+  ({ token, court, start, day, userName, action = '' }) =>
+  async (dispatch, getState) => {
+    dispatch(scheduleStart());
 
-  const URL = SERVER_URL + API + "schedule-day/edit-admin";
-  const days = ["today", "tomorrow", "dayAfter"];
+    const URL = SERVER_URL + API + 'schedule-day/edit-admin';
+    const days = ['today', 'tomorrow', 'dayAfter'];
 
-  try {
-    const res = await fetch(URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        court,
-        start,
-        day: days[day],
-        action,
-        userName,
-      }),
-    });
+    try {
+      const res = await fetch(URL, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          court,
+          start,
+          day: days[day],
+          action,
+          userName,
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!data.error) {
-      const schedule = [...getState().schedule.schedule];
+      if (!data.error) {
+        const schedule = [...getState().schedule.schedule];
 
-      const { editedUser, editedScheduleDay } = data;
+        const { editedUser, editedScheduleDay } = data;
 
-      const index = schedule.findIndex((d) => d.date === getBackendDate(day));
-      schedule[index] = editedScheduleDay;
+        const index = schedule.findIndex((d) => d.date === getBackendDate(day));
+        schedule[index] = editedScheduleDay;
 
-      dispatch(scheduleSuccess(schedule));
-      dispatch(userSuccess(editedUser));
-      return data.message;
-    } else {
-      dispatch(scheduleFail(data.error));
-      return false;
+        dispatch(scheduleSuccess(schedule));
+        dispatch(userSuccess(editedUser));
+        return data.message;
+      } else {
+        dispatch(scheduleFail(data.error));
+        return false;
+      }
+    } catch (err) {
+      dispatch(scheduleFail(err.message || err));
     }
-  } catch (err) {
-    dispatch(scheduleFail(err.message || err));
-  }
-};
+  };
 
-export const scheduleTime = ({
-  token,
-  court,
-  start,
-  day,
-  action = "",
-}) => async (dispatch, getState) => {
-  dispatch(scheduleStart());
+export const scheduleTime =
+  ({ token, court, start, day, action = '' }) =>
+  async (dispatch, getState) => {
+    dispatch(scheduleStart());
 
-  const URL = SERVER_URL + API + "schedule-day/edit";
-  const days = ["today", "tomorrow", "dayAfter"];
+    const URL = SERVER_URL + API + 'schedule-day/edit';
+    const days = ['today', 'tomorrow', 'dayAfter'];
 
-  try {
-    const res = await fetch(URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        court,
-        start,
-        day: days[day],
-        action,
-      }),
-    });
+    try {
+      const res = await fetch(URL, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          court,
+          start,
+          day: days[day],
+          action,
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!data.error) {
-      const schedule = [...getState().schedule.schedule];
+      if (!data.error) {
+        const schedule = [...getState().schedule.schedule];
 
-      const { editedUser, editedScheduleDay } = data;
+        const { editedUser, editedScheduleDay } = data;
 
-      const index = schedule.findIndex((d) => d.date === getBackendDate(day));
-      schedule[index] = editedScheduleDay;
+        const index = schedule.findIndex((d) => d.date === getBackendDate(day));
+        schedule[index] = editedScheduleDay;
 
-      dispatch(scheduleSuccess(schedule));
-      dispatch(userSuccess(editedUser));
-      return data.message;
-    } else {
-      dispatch(scheduleFail(data.error));
-      return false;
+        dispatch(scheduleSuccess(schedule));
+        dispatch(userSuccess(editedUser));
+        return data.message;
+      } else {
+        dispatch(scheduleFail(data.error));
+        return false;
+      }
+    } catch (err) {
+      dispatch(scheduleFail(err.message || err));
     }
-  } catch (err) {
-    dispatch(scheduleFail(err.message || err));
-  }
-};
+  };
 
 export const createDay = (scheduleDay) => ({
   type: actionTypes.CREATE_DAY,

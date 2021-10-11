@@ -1,7 +1,8 @@
-import * as actionTypes from "../actions/actionTypes";
+import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
   schedule: null,
+  quickSchedule: null,
   error: null,
   loading: false,
 };
@@ -18,6 +19,13 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         schedule: action.schedule,
+        error: null,
+        loading: false,
+      };
+    case actionTypes.QUICK_SCHEDULE_SUCCESS:
+      return {
+        ...state,
+        quickSchedule: action.schedule,
         error: null,
         loading: false,
       };

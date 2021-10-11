@@ -4,7 +4,7 @@ export {
   logout,
   checkExpiration,
   authFail,
-} from "./auth";
+} from './auth';
 export {
   updateData,
   userClearError,
@@ -13,7 +13,7 @@ export {
   resetPassword,
   updateUser,
   fetchAllUsers,
-} from "./user";
+} from './user';
 export {
   fetchSchedule,
   scheduleTime,
@@ -21,5 +21,5 @@ export {
   deleteDay,
   updateDay,
   adminScheduleTime,
-  midgnightUpdate,
-} from "./schedule";
+  fetchQuickSchedle
+} from './schedule';
