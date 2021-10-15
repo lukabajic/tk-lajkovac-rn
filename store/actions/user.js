@@ -1,5 +1,5 @@
-import { SERVER_URL, API } from "../../variables";
-import * as actionTypes from "./actionTypes";
+import { SERVER_URL, API } from '../../variables';
+import * as actionTypes from './actionTypes';
 
 export const userStart = () => ({ type: actionTypes.USER_START });
 
@@ -9,22 +9,24 @@ export const userFail = (error) => ({ type: actionTypes.USER_FAIL, error });
 
 export const userClearError = () => ({ type: actionTypes.USER_CLEAR_ERROR });
 
-export const allUsersSuccess = (users) => ({
-  type: actionTypes.ALL_USER_SUCCESS,
+export const usersSuccess = (users) => ({
+  type: actionTypes.USERS_SUCCESS,
   users,
 });
+
+export const usersLoadMore = () => ({ type: actionTypes.USERS_LOAD_MORE });
 
 export const updateData = (token, action, body) => async (dispatch) => {
   dispatch(userStart());
 
-  const URL = SERVER_URL + API + "user/edit";
+  const URL = SERVER_URL + API + 'user/edit';
 
   try {
     const res = await fetch(URL, {
-      method: "POST",
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ action, payload: body }),
     });
@@ -45,11 +47,11 @@ export const updateData = (token, action, body) => async (dispatch) => {
 export const fetchCurUser = (token) => async (dispatch) => {
   dispatch(userStart());
 
-  const URL = SERVER_URL + API + "user/get";
+  const URL = SERVER_URL + API + 'user/get';
 
   try {
     const res = await fetch(URL, {
-      method: "GET",
+      method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -67,39 +69,47 @@ export const fetchCurUser = (token) => async (dispatch) => {
   }
 };
 
-export const fetchAllUsers = (token) => async (dispatch) => {
-  dispatch(userStart());
-
-  const URL = SERVER_URL + API + "user/get-all";
-
-  try {
-    const res = await fetch(URL, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-
-    if (!data.error) {
-      const { users } = data;
-      dispatch(allUsersSuccess(users));
+export const fetchUsers =
+  (token, { loadMore }) =>
+  async (dispatch, getState) => {
+    if (loadMore) {
+      dispatch(usersLoadMore());
     } else {
-      dispatch(userFail(data.error));
+      dispatch(userStart());
     }
-  } catch (err) {
-    dispatch(userFail(err.message || err));
-  }
-};
+
+    const offset = getState().user.users?.length || 0;
+
+    const URL = SERVER_URL + API + `user/list-users/10/${offset}`;
+
+    try {
+      const res = await fetch(URL, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+
+      if (!data.error) {
+        const { users } = data;
+        dispatch(usersSuccess(users));
+      } else {
+        dispatch(userFail(data.error));
+      }
+    } catch (err) {
+      dispatch(userFail(err.message || err));
+    }
+  };
 
 export const resendEmailVerification = (token) => async (dispatch) => {
   dispatch(userStart());
 
-  const URL = SERVER_URL + API + "user/resend";
+  const URL = SERVER_URL + API + 'user/resend';
 
   try {
     const res = await fetch(URL, {
-      method: "POST",
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -119,13 +129,13 @@ export const resendEmailVerification = (token) => async (dispatch) => {
 export const resetPassword = (email) => async (dispatch) => {
   dispatch(userStart());
 
-  const URL = SERVER_URL + API + "user/reset-password";
+  const URL = SERVER_URL + API + 'user/reset-password';
 
   try {
     const res = await fetch(URL, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email }),
     });

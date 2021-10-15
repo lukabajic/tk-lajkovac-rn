@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import { View, StyleSheet } from "react-native";
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { View, StyleSheet } from 'react-native';
 
-import Loader from "../../components/Loader";
-import { fetchSchedule, fetchAllUsers } from "../../store/actions";
-import ScheduleBody from "../../components/ScheduleBody";
+import Loader from '../../components/Loader';
+import { fetchSchedule, fetchUsers } from '../../store/actions';
+import ScheduleBody from '../../components/ScheduleBody';
 
 const Schedule = ({
   schedule,
   users,
   fetchSchedule,
-  fetchAllUsers,
+  fetchUsers,
   token,
   loading,
   route,
@@ -18,7 +18,7 @@ const Schedule = ({
 }) => {
   useEffect(() => {
     if (!schedule) fetchSchedule(token);
-    if (!users) fetchAllUsers(token);
+    if (!users) fetchUsers(token, { loadMore: false });
   }, []);
 
   if (loading || !schedule) return <Loader />;
@@ -54,6 +54,6 @@ export default connect(
   }),
   {
     fetchSchedule,
-    fetchAllUsers,
+    fetchUsers,
   }
 )(Schedule);

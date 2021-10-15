@@ -43,7 +43,7 @@ export const fetchSchedule = (token) => async (dispatch) => {
   }
 };
 
-export const fetchQuickSchedle = (token) => async (dispatch) => {
+export const fetchQuickSchedule = (token) => async (dispatch) => {
   dispatch(scheduleStart());
 
   const URL = SERVER_URL + API + 'schedule-day/get-quick';
@@ -59,8 +59,8 @@ export const fetchQuickSchedle = (token) => async (dispatch) => {
     const data = await res.json();
 
     if (!data.error) {
-      const { scheduleDays } = data;
-      dispatch(quickScheduleSuccess(scheduleDays));
+      const { times } = data;
+      dispatch(quickScheduleSuccess(times));
     } else {
       dispatch(scheduleFail(data.error));
     }

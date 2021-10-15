@@ -12,7 +12,7 @@ export {
   resendEmailVerification,
   resetPassword,
   updateUser,
-  fetchAllUsers,
+  fetchUsers,
 } from './user';
 export {
   fetchSchedule,
@@ -21,5 +21,5 @@ export {
   deleteDay,
   updateDay,
   adminScheduleTime,
-  fetchQuickSchedle
+  fetchQuickSchedule
 } from './schedule';

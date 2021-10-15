@@ -1,24 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   TouchableOpacity,
-} from "react-native";
-import { connect } from "react-redux";
-import { Ionicons } from "@expo/vector-icons";
+} from 'react-native';
+import { connect } from 'react-redux';
+import { Ionicons } from '@expo/vector-icons';
 
-import { fetchAllUsers } from "../../store/actions";
-import Loader from "../../components/Loader";
-import { LargeTitle, Headline, Callout } from "../../components/Typography";
-import Colors from "../../utils/colors";
-import { getBackendDate } from "../../utils/getDate";
-import { callNumber, textNumber } from "../../components/CallNumber";
+import { fetchUsers } from '../../store/actions';
+import Loader from '../../components/Loader';
+import { LargeTitle, Headline, Callout } from '../../components/Typography';
+import Colors from '../../utils/colors';
+import { getBackendDate } from '../../utils/getDate';
+import { callNumber, textNumber } from '../../components/CallNumber';
 
 const BookingIcon = ({ isBooked }) => (
   <Ionicons
-    name={isBooked ? "checkmark-circle" : "checkmark-circle-outline"}
+    name={isBooked ? 'checkmark-circle' : 'checkmark-circle-outline'}
     size={24}
     color={isBooked ? Colors.yellow : Colors.primary}
     style={{ marginRight: 2 }}
@@ -52,7 +52,7 @@ const UserBody = ({ phone, category }) => {
             fontSize: category.length ? 24 : 12,
             color: category.length ? Colors.primary : Colors.darkGray,
             lineHeight: 24,
-            textAlignVertical: "center",
+            textAlignVertical: 'center',
           }}
         >
           N/A
@@ -107,16 +107,22 @@ const User = ({ item }) => {
   );
 };
 
-const Users = ({ fetchAllUsers, users, user, token, loading }) => {
+const Users = ({ fetchUsers, users, user, token, loading, loadingMore }) => {
   useEffect(() => {
-    if (!users) fetchAllUsers(token);
-  }, [users, token, fetchAllUsers]);
+    if (!users) fetchUsers(token, { loadMore: false });
+  }, [users, token, fetchUsers]);
+
+  const loadMore = () => {
+    if (!loadingMore) {
+      fetchUsers(token, { loadMore: true });
+    }
+  };
 
   if (loading || !users) return <Loader />;
 
   return (
     <View style={styles.screen}>
-      <LargeTitle style={{ textAlign: "center", marginBottom: 32 }}>
+      <LargeTitle style={{ textAlign: 'center', marginBottom: 32 }}>
         Spisak članova
       </LargeTitle>
       <FlatList
@@ -124,8 +130,10 @@ const Users = ({ fetchAllUsers, users, user, token, loading }) => {
         style={styles.users}
         keyExtractor={(item) => item.userId}
         ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+        onEndReached={loadMore}
         renderItem={({ item }) => <User item={item} />}
       />
+      {loadingMore && <Loader />}
     </View>
   );
 };
@@ -136,7 +144,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   users: {
-    overflow: "visible",
+    overflow: 'visible',
   },
   user: {
     padding: 16,
@@ -150,23 +158,23 @@ const styles = StyleSheet.create({
     margin: 3,
   },
   userHeader: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingBottom: 16,
-    borderBottomColor: "rgba(38, 35, 34, 0.2)",
+    borderBottomColor: 'rgba(38, 35, 34, 0.2)',
     borderBottomWidth: 1,
     marginBottom: 16,
   },
   userSchedule: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   userBody: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   userBodyItem: {
-    width: "33%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '33%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
@@ -176,6 +184,7 @@ export default connect(
     users: state.user.users,
     user: state.user.user,
     loading: state.user.loading,
+    loadingMore: state.user.loadingMore,
   }),
-  { fetchAllUsers }
+  { fetchUsers }
 )(Users);

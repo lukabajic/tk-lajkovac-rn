@@ -23,8 +23,8 @@ const NoTokenIndex = ({ navigation, loading }) => {
       <ScrollView contentContainerStyle={styles.wrapper}>
         <Image style={styles.image} source={image} />
         <LargeTitle style={{ color: Colors.black }}>TK Lajkovac</LargeTitle>
-        <Headline style={{ color: Colors.black }}>Zvanična aplikacija</Headline>
-        <View style={styles.info}>
+        {/* <Headline style={{ color: Colors.black }}>Zvanična aplikacija</Headline> */}
+        {/* <View style={styles.info}>
           <Callout style={[styles.callout, { marginBottom: 8 }]}>
             Zakazivanje termina besplatno, online.
           </Callout>
@@ -32,7 +32,7 @@ const NoTokenIndex = ({ navigation, loading }) => {
             Kontaktirajte druge članove.
           </Callout>
           <Callout style={styles.callout}>Pratite rezultate lige.</Callout>
-        </View>
+        </View> */}
         <View style={styles.actions}>
           <Button
             tertiary

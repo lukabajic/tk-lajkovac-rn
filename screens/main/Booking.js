@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,19 +6,26 @@ import {
   ScrollView,
   SafeAreaView,
   Alert,
-} from "react-native";
-import { connect } from "react-redux";
+} from 'react-native';
+import { connect } from 'react-redux';
 
-import { formatTime } from "../../utils/format";
-import getDate from "../../utils/getDate";
-import Loader from "../../components/Loader";
-import Field from "../../components/Field";
-import Button from "../../components/Button";
-import Info from "../../components/Info";
-import { TitleOne } from "../../components/Typography";
-import { scheduleTime, adminScheduleTime } from "../../store/actions";
+import { formatTime } from '../../utils/format';
+import getDate from '../../utils/getDate';
+import Loader from '../../components/Loader';
+import Field from '../../components/Field';
+import Button from '../../components/Button';
+import Info from '../../components/Info';
+import { TitleOne } from '../../components/Typography';
+import {
+  scheduleTime,
+  adminScheduleTime,
+  fetchSchedule,
+} from '../../store/actions';
 
 const selectTime = (schedule, id) => {
+  if (!schedule)
+    return { start: '', end: '', userName: '', userId: '', taken: false };
+
   const times = [];
 
   schedule.forEach((s) =>
@@ -38,19 +45,23 @@ const Booking = ({
   error,
   schedule,
   adminScheduleTime,
+  fetchSchedule,
 }) => {
   const { _id, day, court, isAdmin } = route.params;
+
+  useEffect(() => {
+    if (!schedule) fetchSchedule(token);
+  }, []);
+
   // const [opponenet, setOpponent] = useState("");
   const {
     start,
     end,
-    userName: pUserName = "",
-    userId = "",
+    userName: pUserName = '',
+    userId = '',
     taken,
   } = selectTime(schedule, _id);
   const [userName, setUserName] = useState(pUserName);
-
-  if (loading) return <Loader />;
 
   const user = users?.find((u) => u.userId === userId);
   const name = user?.data.displayName || userName;
@@ -58,43 +69,43 @@ const Booking = ({
   const handleBooking = () => {
     scheduleTime({ token, court, start, day }).then((res) => {
       if (!res && error) {
-        Alert.alert("Došlo je do greške", error, [
+        Alert.alert('Došlo je do greške', error, [
           {
-            text: "Nazad",
+            text: 'Nazad',
             onPress: () => navigation.goBack(),
-            style: "cancel",
+            style: 'cancel',
           },
         ]);
       } else {
-        Alert.alert("Termin zakazan", res, [
+        Alert.alert('Termin zakazan', res, [
           {
-            text: "U redu",
+            text: 'U redu',
             onPress: () => navigation.goBack(),
-            style: "cancel",
+            style: 'cancel',
           },
         ]);
       }
     });
   };
 
-  const handleAdminBooking = (action = "") => {
+  const handleAdminBooking = (action = '') => {
     adminScheduleTime({ token, court, start, day, userName, action }).then(
       (res) => {
         if (!res && error) {
-          Alert.alert("Došlo je do greške", error, [
+          Alert.alert('Došlo je do greške', error, [
             {
-              text: "Nazad",
-              style: "cancel",
+              text: 'Nazad',
+              style: 'cancel',
             },
           ]);
         } else {
           Alert.alert(
-            action === "cancel" ? "Termin otkazan" : "Termin zakazan",
+            action === 'cancel' ? 'Termin otkazan' : 'Termin zakazan',
             res,
             [
               {
-                text: "U redu",
-                style: "cancel",
+                text: 'U redu',
+                style: 'cancel',
               },
             ]
           );
@@ -103,10 +114,12 @@ const Booking = ({
     );
   };
 
+  if (loading) return <Loader />;
+
   return (
     <SafeAreaView style={styles.screen}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : null}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={40}
         style={styles.wrapper}
       >
@@ -138,7 +151,7 @@ const Booking = ({
                 primary
                 default
                 fluid
-                onPress={() => handleAdminBooking("cancel")}
+                onPress={() => handleAdminBooking('cancel')}
               >
                 Otkaži
               </Button>
@@ -147,7 +160,7 @@ const Booking = ({
                 primary
                 default
                 fluid
-                onPress={() => handleAdminBooking("")}
+                onPress={() => handleAdminBooking('')}
               >
                 Zakaži
               </Button>
@@ -216,7 +229,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 16,
     paddingTop: 32,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   wrapper: {
     flexGrow: 1,
@@ -238,5 +251,6 @@ export default connect(
   {
     scheduleTime,
     adminScheduleTime,
+    fetchSchedule,
   }
 )(Booking);

@@ -8,7 +8,7 @@ import Colors from '../../utils/colors';
 import Button from '../../components/Button';
 import { ScheduleTime } from '../../components/ScheduleBody';
 import {
-  fetchQuickSchedle,
+  fetchQuickSchedule,
   deleteDay,
   createDay,
   updateDay,
@@ -25,19 +25,19 @@ const QuickSchedule = connect(
     isAdmin: state.user.user.isAdmin,
     user: state.user.user,
   }),
-  { fetchQuickSchedle }
+  { fetchQuickSchedule }
 )(
   ({
     quickSchedule,
     token,
-    fetchQuickSchedle,
+    fetchQuickSchedule,
     loading,
     navigation,
     isAdmin,
     user,
   }) => {
     useEffect(() => {
-      if (!quickSchedule) fetchQuickSchedle(token);
+      if (!quickSchedule) fetchQuickSchedule(token);
     }, []);
 
     const hasBooking = user.quickSchedule?.find(
@@ -62,6 +62,7 @@ const QuickSchedule = connect(
               navigation={navigation}
               notLast={i + 1 < quickSchedule?.length}
               isAdmin={isAdmin}
+              quickTime
             />
           ))
         ) : (

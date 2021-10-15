@@ -43,6 +43,7 @@ export const ScheduleTime = ({
   notLast,
   isAdmin,
   users,
+  quickTime = false,
 }) => {
   const { taken, start, end, userId, userName, _id } = item;
 
@@ -63,8 +64,17 @@ export const ScheduleTime = ({
       style={scheduleTimeStyles}
       disabled={(taken && !isAdmin) || isElapsed(start, day)}
       onPress={async () => {
-        await navigation.navigate('ScheduleDaysTabs');
-        navigation.navigate('Booking', { _id, day, court, isAdmin });
+        if (quickTime) {
+          navigation.navigate('ScheduleDaysTabs', {
+            screen: 'Danas',
+            params: {
+              screen: 'Booking',
+              params: { _id, day, court, isAdmin },
+            },
+          });
+        } else {
+          navigation.navigate('Booking', { _id, day, court, isAdmin });
+        }
       }}
     >
       <View style={scheduleTimeBeforeStyles} />
