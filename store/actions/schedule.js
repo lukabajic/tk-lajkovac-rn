@@ -104,7 +104,7 @@ export const adminScheduleTime =
         schedule[index] = editedScheduleDay;
 
         dispatch(scheduleSuccess(schedule));
-        dispatch(userSuccess(editedUser));
+        // dispatch(userSuccess(editedUser));
         return data.message;
       } else {
         dispatch(scheduleFail(data.error));

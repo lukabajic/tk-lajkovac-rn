@@ -59,28 +59,36 @@ export const ScheduleTime = ({
   const user = users?.find((u) => u.userId === userId);
   const name = userName || user?.data?.displayName || '';
 
+  const handlePress = () => {
+    if (quickTime) {
+      navigation.navigate('ScheduleDaysTabs', {
+        screen: 'Danas',
+        params: {
+          screen: 'Booking',
+          params: { _id, day, court, isAdmin },
+        },
+      });
+    } else {
+      navigation.navigate('Booking', { _id, day, court, isAdmin });
+    }
+  };
+
+  const disablePress = (taken && !isAdmin) || isElapsed(start, day);
+
+  const headlineText = taken
+    ? isAdmin
+      ? name
+      : 'Zauzet termin'
+    : 'Slobodan termin';
+
   return (
     <Pressable
       style={scheduleTimeStyles}
-      disabled={(taken && !isAdmin) || isElapsed(start, day)}
-      onPress={async () => {
-        if (quickTime) {
-          navigation.navigate('ScheduleDaysTabs', {
-            screen: 'Danas',
-            params: {
-              screen: 'Booking',
-              params: { _id, day, court, isAdmin },
-            },
-          });
-        } else {
-          navigation.navigate('Booking', { _id, day, court, isAdmin });
-        }
-      }}
+      disabled={disablePress}
+      onPress={handlePress}
     >
       <View style={scheduleTimeBeforeStyles} />
-      <Headline style={{ color: Colors.darkGray }}>
-        {taken ? (isAdmin ? name : 'Zauzet termin') : 'Slobodan termin'}
-      </Headline>
+      <Headline style={{ color: Colors.darkGray }}>{headlineText}</Headline>
       <View style={styles.scheduleWhen}>
         <Subheadline style={[styles.timeFont, styles.startTime]}>
           {formatTime(start)}
