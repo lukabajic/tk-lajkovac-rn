@@ -1,6 +1,6 @@
-import { SERVER_URL, API } from "../../variables";
-import * as actionTypes from "./actionTypes";
-import { userSuccess, fetchCurUser } from "./user";
+import { SERVER_URL, API } from '../../variables';
+import * as actionTypes from './actionTypes';
+import { userSuccess, fetchCurUser } from './user';
 
 export const authStart = () => ({ type: actionTypes.AUTH_START });
 
@@ -16,6 +16,11 @@ export const logout = () => ({ type: actionTypes.LOGOUT });
 
 export const authClearError = () => ({ type: actionTypes.AUTH_CLEAR_ERROR });
 
+export const setRegistrationProcess = (payload) => ({
+  type: actionTypes.AUTH_REGISTRATION_PROCESS,
+  payload,
+});
+
 const setAuthTimeout = (expiresIn) => (dispatch) => {
   setTimeout(() => dispatch(logout()), expiresIn);
 };
@@ -23,13 +28,13 @@ const setAuthTimeout = (expiresIn) => (dispatch) => {
 export const auth = (action, email, password) => async (dispatch) => {
   dispatch(authStart());
 
-  const URL = SERVER_URL + API + "auth" + action;
+  const URL = SERVER_URL + API + 'auth' + action;
 
   try {
     const res = await fetch(URL, {
-      method: action === "/register" ? "PUT" : "POST",
+      method: action === '/register' ? 'PUT' : 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
     });
@@ -40,6 +45,7 @@ export const auth = (action, email, password) => async (dispatch) => {
 
       const expirationDate = new Date(new Date().getTime() + expiresIn);
 
+      action === '/register' && dispatch(setRegistrationProcess(true));
       dispatch(authSuccess(token, expirationDate));
       dispatch(userSuccess(user));
       dispatch(setAuthTimeout(expiresIn));
@@ -49,6 +55,7 @@ export const auth = (action, email, password) => async (dispatch) => {
       return false;
     }
   } catch (err) {
+    console.log(err);
     dispatch(authFail(err));
   }
 };

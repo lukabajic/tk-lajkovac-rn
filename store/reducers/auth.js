@@ -1,8 +1,9 @@
-import * as actionTypes from "../actions/actionTypes";
+import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
   token: null,
   expirationDate: null,
+  registrationProcess: false,
   error: null,
   loading: false,
 };
@@ -34,6 +35,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         expirationDate: null,
         token: null,
+      };
+    case actionTypes.AUTH_REGISTRATION_PROCESS:
+      return {
+        ...state,
+        registrationProcess: action.payload,
       };
     case actionTypes.AUTH_CLEAR_ERROR:
       return {
