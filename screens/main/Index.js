@@ -111,14 +111,14 @@ const Index = ({
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.wrapper}>
-        <View style={styles.section}>
+        {/* <View style={styles.section}>
           <LargeTitle style={{ color: Colors.black, textAlign: 'center' }}>
             TK Lajkovac
           </LargeTitle>
           <LargeTitle style={{ color: Colors.black, textAlign: 'center' }}>
             Zvanična aplikacija
           </LargeTitle>
-        </View>
+        </View> */}
         <View style={styles.section}>
           <TitleTwo style={styles.callToAction}>Brzo zakazivanje</TitleTwo>
           <QuickSchedule navigation={navigation} />
