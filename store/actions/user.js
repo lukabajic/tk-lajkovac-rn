@@ -21,15 +21,35 @@ export const updateData = (token, action, body) => async (dispatch) => {
 
   const URL = SERVER_URL + API + 'user/edit';
 
+  const options = {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
+    },
+  };
+
+  let data;
+
+  if (action === 'UPDATE_PICTURE') {
+    options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    data = new FormData();
+
+    data.append('avatar', body.image);
+    data.append('action', action);
+
+    if (body.oldImage) {
+      data.append('payload', body.oldImage);
+    }
+  } else {
+    data = JSON.stringify({ action, payload: body });
+    options.headers['Content-Type'] = 'application/json';
+  }
+
+  options.body = data;
+
   try {
-    const res = await fetch(URL, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ action, payload: body }),
-    });
+    const res = await fetch(URL, options);
     const data = await res.json();
 
     if (!data.error) {
