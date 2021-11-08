@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
   actions: {
     width: '100%',
     marginTop: 18,
+    paddingBottom: 10
   },
 });
 

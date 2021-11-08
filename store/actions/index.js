@@ -4,6 +4,7 @@ export {
   logout,
   checkExpiration,
   authFail,
+  setRegistrationProcess,
 } from './auth';
 export {
   updateData,
@@ -21,5 +22,5 @@ export {
   deleteDay,
   updateDay,
   adminScheduleTime,
-  fetchQuickSchedule
+  fetchQuickSchedule,
 } from './schedule';

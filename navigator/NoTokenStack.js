@@ -21,7 +21,7 @@ const NoTokenStack = ({ loading }) => {
       <Stack.Screen
         name="NoTokenIndex"
         component={NoTokenIndex}
-        options={{ title: false }}
+        options={{ title: false, headerShown: false }}
       />
       <Stack.Screen
         name="SignUp"

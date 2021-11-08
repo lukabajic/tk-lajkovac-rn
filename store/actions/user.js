@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { SERVER_URL, API } from '../../variables';
 import * as actionTypes from './actionTypes';
 
@@ -32,9 +33,13 @@ export const updateData = (token, action, body) => async (dispatch) => {
   let data;
 
   if (action === 'UPDATE_PICTURE') {
-    options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-    data = new FormData();
+    if (Platform.OS === 'android') {
+      options.headers['Content-Type'] = 'multipart/form-data';
+    } else {
+      options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    }
 
+    data = new FormData();
     data.append('avatar', body.image);
     data.append('action', action);
 

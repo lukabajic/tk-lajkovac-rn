@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
-import { View, Image, StyleSheet, Alert } from 'react-native';
+import { View, Image, StyleSheet, Alert, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 import FormScreen from '../../components/FormScreen';
@@ -19,6 +19,7 @@ const ProfilePicture = ({
   token,
   navigation,
   user,
+  registrationProcess,
 }) => {
   const [imageUri, setImageUri] = useState(user?.data?.avatarUrl || null);
   const [image, setImage] = useState(null);
@@ -93,7 +94,11 @@ const ProfilePicture = ({
   };
 
   const onSubmit = async () => {
-    const uri = image.uri;
+    const uri =
+      Platform.OS === 'android'
+        ? image.uri.replace('file:/', 'file:///')
+        : image.uri;
+        
     const name = uri.split('/').pop();
 
     const match = /\.(\w+)$/.exec(name);
@@ -107,7 +112,7 @@ const ProfilePicture = ({
       },
       oldImage: user?.data?.avatarName || null,
     });
-    navigation.goBack();
+    !registrationProcess && navigation.goBack();
   };
 
   if (loading) return <Loader />;
@@ -119,7 +124,7 @@ const ProfilePicture = ({
     >
       <View style={styles.wrapper}>
         <View style={styles.imageContainer}>
-          {hasImage ? (
+          {imageUri ? (
             <Image style={styles.image} source={{ uri: imageUri }} />
           ) : (
             <Image style={styles.image} source={placeholder} />
@@ -217,6 +222,7 @@ export default connect(
     user: state.user.user,
     loading: state.user.loading,
     token: state.auth.token,
+    registrationProcess: state.auth.registrationProcess,
   }),
   { updateData }
 )(ProfilePicture);
