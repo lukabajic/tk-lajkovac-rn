@@ -150,6 +150,7 @@ export const scheduleTime =
 
         dispatch(scheduleSuccess(schedule));
         dispatch(userSuccess(editedUser));
+        dispatch(fetchQuickSchedule(token));
         return data.message;
       } else {
         dispatch(scheduleFail(data.error));

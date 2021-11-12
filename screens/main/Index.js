@@ -1,9 +1,16 @@
 import React, { useEffect } from 'react';
-import { SafeAreaView, StyleSheet, View, ScrollView } from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  ScrollView,
+  Pressable,
+} from 'react-native';
 import { connect } from 'react-redux';
 import OpenSocket from 'socket.io-client';
 
-import { LargeTitle, TitleTwo, Subheadline } from '../../components/Typography';
+import { Body, TitleTwo, Subheadline } from '../../components/Typography';
+import { formatTime } from '../../utils/format';
 import Colors from '../../utils/colors';
 import Button from '../../components/Button';
 import { ScheduleTime } from '../../components/ScheduleBody';
@@ -23,7 +30,6 @@ const QuickSchedule = connect(
     quickSchedule: state.schedule.quickSchedule,
     loading: state.schedule.loading,
     isAdmin: state.user.user.isAdmin,
-    user: state.user.user,
   }),
   { fetchQuickSchedule }
 )(
@@ -34,24 +40,15 @@ const QuickSchedule = connect(
     loading,
     navigation,
     isAdmin,
-    user,
   }) => {
     useEffect(() => {
       if (!quickSchedule) fetchQuickSchedule(token);
     }, []);
 
-    const hasBooking = user.quickSchedule?.find(
-      (b) => b.date === getBackendDate(0)
-    );
-
     return (
       <View style={[styles.quickSchedule, styles.withBorder]}>
         {loading ? (
           <Loader contentContainerStyle={{ marginVertical: 32 }} />
-        ) : hasBooking ? (
-          <Subheadline style={{ textAlign: 'center' }}>
-            Već imate zakazan termin za ovaj dan.
-          </Subheadline>
         ) : quickSchedule?.length ? (
           quickSchedule.map((t, i) => (
             <ScheduleTime
@@ -82,6 +79,7 @@ const Index = ({
   deleteDay,
   updateDay,
   updateUser,
+  user,
 }) => {
   useEffect(() => {
     if (token) {
@@ -108,8 +106,28 @@ const Index = ({
     }
   }, [token]);
 
+  const hasBooking = user.schedule?.find((b) => b.date === getBackendDate(0));
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      {hasBooking && (
+        <Pressable
+          style={styles.playing}
+          onPress={() => {
+            navigation.navigate('ScheduleDaysTabs', {
+              screen: 'Danas',
+            });
+          }}
+        >
+          <Body style={styles.playingText}>
+            Igrate danas u {formatTime(hasBooking.time)} na terenu br.{' '}
+            {hasBooking.court}.
+          </Body>
+          <Button tertiary circle style={{ padding: 4 }}>
+            Otkaži
+          </Button>
+        </Pressable>
+      )}
       <ScrollView contentContainerStyle={styles.wrapper}>
         {/* <View style={styles.section}>
           <LargeTitle style={{ color: Colors.black, textAlign: 'center' }}>
@@ -119,18 +137,20 @@ const Index = ({
             Zvanična aplikacija
           </LargeTitle>
         </View> */}
-        <View style={styles.section}>
-          <TitleTwo style={styles.callToAction}>Brzo zakazivanje</TitleTwo>
-          <QuickSchedule navigation={navigation} />
-          <Button
-            primary
-            fluid
-            default
-            onPress={() => navigation.navigate('ScheduleDaysTabs')}
-          >
-            Pregledaj sve
-          </Button>
-        </View>
+        {!hasBooking && (
+          <View style={styles.section}>
+            <TitleTwo style={styles.callToAction}>Brzo zakazivanje</TitleTwo>
+            <QuickSchedule navigation={navigation} />
+            <Button
+              primary
+              fluid
+              default
+              onPress={() => navigation.navigate('ScheduleDaysTabs')}
+            >
+              Pregledaj sve
+            </Button>
+          </View>
+        )}
         <View style={styles.section}>
           <TitleTwo style={styles.callToAction}> Tražite protivnika?</TitleTwo>
           <Button
@@ -153,6 +173,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  playing: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: 56,
+    padding: 10,
+    backgroundColor: Colors.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    shadowColor: Colors.gray,
+    shadowOpacity: 1,
+    shadowOffset: { width: 1, height: 2 },
+    shadowRadius: 4,
+    elevation: 3,
+    zIndex: 3,
+  },
+  playingText: {
+    color: Colors.white,
+    fontWeight: '600',
+    letterSpacing: 0.36,
   },
   info: {
     marginTop: 12,
@@ -185,9 +228,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect((state) => ({ token: state.auth.token }), {
-  createDay,
-  deleteDay,
-  updateDay,
-  updateUser,
-})(Index);
+export default connect(
+  (state) => ({
+    token: state.auth.token,
+    user: state.user.user,
+  }),
+  {
+    createDay,
+    deleteDay,
+    updateDay,
+    updateUser,
+  }
+)(Index);

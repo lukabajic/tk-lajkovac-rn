@@ -22,6 +22,8 @@ import getDate from '../utils/getDate';
 import { scheduleTime } from '../store/actions';
 
 const isElapsed = (start, day) => {
+  if (day > 0) return false;
+
   const hours = Number(start.slice(0, 2));
   const minutes = Number(start.slice(2, 4));
 
@@ -29,10 +31,9 @@ const isElapsed = (start, day) => {
   startTime.setHours(hours);
   startTime.setMinutes(minutes);
 
-  const curTime = new Date(Date.now() + day * 86400000);
   const limit = new Date(startTime.getTime() + 30 * 60000);
 
-  return curTime.getTime() > limit.getTime();
+  return Date.now() > limit.getTime();
 };
 
 export const ScheduleTime = ({
